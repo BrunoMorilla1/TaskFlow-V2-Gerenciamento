@@ -24,32 +24,24 @@ public class TenantFiltro extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+        if (path.contains("/api/v1/auth") || path.contains("/consultar-cnpj")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
-            String tenantHeader = request.getHeader(HEADER_TENANT);
-            String tenantId = normalizarTenant(tenantHeader);
+            String tenantId = request.getHeader(HEADER_TENANT);
 
-            if (!TenantContext.possuiTenant() && tenantId != null) {
-                TenantContext.setTenant(tenantId);
-                log.debug("TenantFiltro - Tenant identificado via header. tenantId={}", tenantId);
-
-            } else if (TenantContext.possuiTenant()) {
-                log.debug("TenantFiltro - Tenant já presente no contexto. tenantId={}", TenantContext.getTenant());
-
+            if (tenantId != null && !tenantId.isBlank()) {
+                TenantContext.setTenant(tenantId.trim());
             } else {
-                log.debug("TenantFiltro - Requisição sem tenant definido.");
+                log.debug("Requisição sem header de Tenant: {}", path);
             }
 
             filterChain.doFilter(request, response);
         } finally {
+            TenantContext.clear();
         }
-    }
-
-    private String normalizarTenant(String tenantId) {
-        if (tenantId == null) {
-            return null;
-        }
-
-        String tenantNormalizado = tenantId.trim();
-        return tenantNormalizado.isBlank() ? null : tenantNormalizado;
     }
 }

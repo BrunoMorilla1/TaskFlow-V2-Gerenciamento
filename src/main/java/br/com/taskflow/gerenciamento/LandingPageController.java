@@ -20,4 +20,14 @@ public class LandingPageController {
     public String empresa() {
         return "empresa";
     }
+
+    @GetMapping("/planos")
+    public String planos() {
+        return "planos";
+    }
+
+    @GetMapping("/sucesso")
+    public String sucesso() {
+        return "sucesso";
+    }
 }

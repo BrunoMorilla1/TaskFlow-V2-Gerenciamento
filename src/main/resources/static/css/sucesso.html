@@ -1,0 +1,409 @@
+:root {
+--primary-gradient: linear-gradient(135deg, #14b8a6 0%, #3b82f6 50%, #6366f1 100%);
+--primary-color: #14b8a6;
+--success: #10b981;
+
+--text-dark: #0f172a;
+--text-medium: #334155;
+--text-light: #64748b;
+
+--gray-50: #f8fafc;
+--gray-100: #f1f5f9;
+--gray-200: #e2e8f0;
+--gray-300: #cbd5e1;
+
+--border-radius: 12px;
+--shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+--shadow-lg: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+background: var(--gray-50);
+color: var(--text-medium);
+line-height: 1.6;
+}
+
+/* ==================== LAYOUT ==================== */
+.app {
+display: flex;
+min-height: 100vh;
+}
+
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+width: 300px;
+min-width: 300px;
+background: var(--primary-gradient);
+color: white;
+padding: 32px 24px;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+box-shadow: var(--shadow-lg);
+}
+
+.logo {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 48px;
+font-size: 1.5rem;
+font-weight: 700;
+}
+
+.steps {
+display: flex;
+flex-direction: column;
+gap: 16px;
+}
+
+.step {
+display: flex;
+align-items: center;
+gap: 14px;
+padding: 14px;
+border-radius: 10px;
+transition: all 0.3s ease;
+opacity: 0.6;
+}
+
+.step.active {
+background: rgba(255, 255, 255, 0.15);
+opacity: 1;
+}
+
+.step.done {
+opacity: 0.9;
+}
+
+.step-number {
+width: 36px;
+height: 36px;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.2);
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 600;
+flex-shrink: 0;
+}
+
+.step.active .step-number,
+.step.done .step-number {
+background: rgba(16, 185, 129, 0.4);
+}
+
+.step-text {
+font-size: 0.95rem;
+font-weight: 500;
+}
+
+.sidebar-footer {
+padding-top: 24px;
+border-top: 1px solid rgba(255, 255, 255, 0.15);
+font-size: 0.85rem;
+opacity: 0.8;
+}
+
+.sidebar-footer p {
+margin-bottom: 6px;
+font-weight: 500;
+}
+
+.sidebar-footer a {
+color: white;
+text-decoration: none;
+opacity: 0.9;
+}
+
+.sidebar-footer a:hover {
+opacity: 1;
+text-decoration: underline;
+}
+
+/* ==================== CONTENT ==================== */
+.content {
+flex: 1;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 40px 24px;
+background: var(--gray-50);
+}
+
+/* ==================== SUCCESS CARD ==================== */
+.success-card {
+max-width: 600px;
+width: 100%;
+background: white;
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-lg);
+padding: 48px;
+text-align: center;
+animation: fadeInScale 0.5s ease;
+}
+
+@keyframes fadeInScale {
+from {
+opacity: 0;
+transform: scale(0.9);
+}
+to {
+opacity: 1;
+transform: scale(1);
+}
+}
+
+/* ==================== SUCCESS ICON ==================== */
+.success-icon {
+display: flex;
+justify-content: center;
+margin-bottom: 24px;
+animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+0% {
+opacity: 0;
+transform: scale(0.3);
+}
+50% {
+opacity: 1;
+transform: scale(1.05);
+}
+70% {
+transform: scale(0.9);
+}
+100% {
+transform: scale(1);
+}
+}
+
+.success-card h1 {
+font-size: 2rem;
+font-weight: 700;
+color: var(--text-dark);
+margin-bottom: 12px;
+}
+
+.subtitle {
+color: var(--text-light);
+font-size: 1.1rem;
+margin-bottom: 32px;
+}
+
+/* ==================== STATUS INFO ==================== */
+.status-info {
+background: var(--gray-50);
+border-radius: 10px;
+padding: 24px;
+margin-bottom: 24px;
+text-align: left;
+}
+
+.info-row {
+display: flex;
+justify-content: space-between;
+padding: 10px 0;
+border-bottom: 1px solid var(--gray-200);
+}
+
+.info-row:last-child {
+border-bottom: none;
+}
+
+.label {
+color: var(--text-light);
+font-weight: 500;
+}
+
+.value {
+color: var(--text-dark);
+font-weight: 600;
+}
+
+/* ==================== PAYMENT LINK BOX ==================== */
+.payment-link-box {
+background: #fef3c7;
+border: 2px solid #fbbf24;
+border-radius: 10px;
+padding: 20px;
+margin-bottom: 24px;
+}
+
+.payment-link-box p {
+margin-bottom: 12px;
+color: var(--text-dark);
+}
+
+.btn-payment-link {
+display: inline-block;
+background: #f59e0b;
+color: white;
+padding: 12px 24px;
+border-radius: 8px;
+text-decoration: none;
+font-weight: 600;
+transition: all 0.2s ease;
+}
+
+.btn-payment-link:hover {
+background: #d97706;
+transform: translateY(-2px);
+}
+
+/* ==================== NEXT STEPS ==================== */
+.next-steps {
+text-align: left;
+background: var(--gray-50);
+padding: 24px;
+border-radius: 10px;
+margin-bottom: 32px;
+}
+
+.next-steps h3 {
+font-size: 1.2rem;
+color: var(--text-dark);
+margin-bottom: 16px;
+}
+
+.next-steps ul {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.next-steps li {
+display: flex;
+align-items: flex-start;
+gap: 10px;
+color: var(--text-medium);
+font-size: 0.95rem;
+}
+
+/* ==================== ACTIONS ==================== */
+.actions {
+display: flex;
+gap: 16px;
+justify-content: center;
+flex-wrap: wrap;
+}
+
+.btn-primary {
+background: var(--primary-gradient);
+color: white;
+padding: 14px 32px;
+border-radius: 8px;
+text-decoration: none;
+font-weight: 600;
+transition: all 0.2s ease;
+box-shadow: var(--shadow-md);
+display: inline-block;
+}
+
+.btn-primary:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.btn-secondary {
+background: white;
+color: var(--text-dark);
+padding: 14px 32px;
+border-radius: 8px;
+text-decoration: none;
+font-weight: 600;
+border: 2px solid var(--gray-300);
+transition: all 0.2s ease;
+display: inline-block;
+}
+
+.btn-secondary:hover {
+background: var(--gray-100);
+border-color: var(--gray-400);
+}
+
+/* ==================== UTILITIES ==================== */
+.hidden {
+display: none !important;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1024px) {
+.sidebar {
+width: 260px;
+min-width: 260px;
+}
+}
+
+@media (max-width: 768px) {
+.app {
+flex-direction: column;
+}
+
+.sidebar {
+width: 100%;
+min-width: 100%;
+padding: 24px;
+}
+
+.steps {
+flex-direction: row;
+overflow-x: auto;
+}
+
+.step {
+flex-direction: column;
+text-align: center;
+min-width: 100px;
+}
+
+.step-text {
+font-size: 0.8rem;
+}
+
+.content {
+padding: 32px 20px;
+}
+
+.success-card {
+padding: 32px 24px;
+}
+
+.success-card h1 {
+font-size: 1.6rem;
+}
+
+.actions {
+flex-direction: column;
+}
+
+.btn-primary,
+.btn-secondary {
+width: 100%;
+text-align: center;
+}
+}
+
+@media (max-width: 480px) {
+.success-card {
+padding: 24px 20px;
+}
+
+.success-card h1 {
+font-size: 1.4rem;
+}
+
+.info-row {
+flex-direction: column;
+gap: 4px;
+}
+}

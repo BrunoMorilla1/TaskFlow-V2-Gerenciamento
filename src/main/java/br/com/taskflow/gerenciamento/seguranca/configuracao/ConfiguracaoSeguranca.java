@@ -73,6 +73,7 @@ public class ConfiguracaoSeguranca {
                                         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
                                         "img-src 'self' data: blob: https://bs-uploads.toptal.io https://cdn.sanity.io https://mir-s3-cdn-cf.behance.net https://www.inetsoft.com; " +
                                         "font-src 'self' data: https://fonts.gstatic.com; " +
+                                        "connect-src 'self' http://localhost:8080; " +
                                         "connect-src 'self'; " +
                                         "frame-ancestors 'none';"
                         ))
@@ -80,8 +81,8 @@ public class ConfiguracaoSeguranca {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
-
-                        .requestMatchers("/", "empresa", "/login", "/cadastro", "/landing.html", "/favicon.ico", "/site.webmanifest").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/empresas/consultar-cnpj/**").permitAll()
+                        .requestMatchers("/", "/empresa", "/login", "/cadastro", "/landing.html", "/favicon.ico", "/site.webmanifest").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/assets/**", "/images/**").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolha seu Plano | Taskflow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/planos.css">
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 16px; font-weight: 500;">Processando pagamento...</p>
+</div>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div>
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="white" opacity="0.2"/>
+                    <path d="M16 8L8 12V20L16 24L24 20V12L16 8Z" fill="white"/>
+                </svg>
+                <span>Taskflow</span>
+            </div>
+
+            <div class="steps">
+                <div class="step done" data-step="1">
+                    <div class="step-number">✓</div>
+                    <div class="step-text">Dados da Empresa</div>
+                </div>
+                <div class="step active" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Escolha do Plano</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Confirmação</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <p>Precisa de ajuda?</p>
+            <a href="mailto:suporte@taskflow.com.br">suporte@taskflow.com.br</a>
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+        <!-- ALERT CONTAINER -->
+        <div id="alertContainer"></div>
+
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Escolha seu Plano</h1>
+            <p>Selecione o plano ideal para sua empresa e comece agora</p>
+        </div>
+
+        <!-- PRICING CARDS -->
+        <div class="pricing-container">
+
+            <!-- PLANO ÚNICO -->
+            <div class="pricing-card featured" data-testid="plano-card">
+                <div class="badge">Mais Popular</div>
+
+                <div class="plan-header">
+                    <h2>Plano Empresarial</h2>
+                    <p class="plan-description">Acesso completo a todas as funcionalidades</p>
+                </div>
+
+                <div class="price-box">
+                    <div class="price">
+                        <span class="currency">R$</span>
+                        <span class="amount">49</span>
+                        <span class="decimals">,90</span>
+                    </div>
+                    <div class="period">/mês</div>
+                </div>
+
+                <ul class="features-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Gestão completa de clientes</span>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Controle de estoque e produtos</span>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Ordens de serviço ilimitadas</span>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Relatórios financeiros avançados</span>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Suporte prioritário</span>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Atualizações gratuitas</span>
+                    </li>
+                </ul>
+
+                <button
+                        class="btn-select"
+                        onclick="showCheckoutModal()"
+                        data-testid="selecionar-plano-btn"
+                >
+                    Selecionar Plano
+                </button>
+            </div>
+
+        </div>
+
+        <!-- GARANTIA -->
+        <div class="guarantee-box">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M9 12l2 2 4-4"/>
+            </svg>
+            <div>
+                <h3>Garantia de 7 dias</h3>
+                <p>Se não ficar satisfeito, devolvemos seu dinheiro sem perguntas</p>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div id="checkoutModal" class="modal" data-testid="checkout-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Finalizar Assinatura</h2>
+            <button class="btn-close" onclick="closeCheckoutModal()" data-testid="close-modal-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+
+            <!-- PAYMENT METHOD SELECTOR -->
+            <div class="payment-methods">
+                <h3>Escolha a forma de pagamento</h3>
+                <div class="payment-options">
+                    <label class="payment-option" data-testid="payment-pix">
+                        <input type="radio" name="paymentMethod" value="PIX" checked />
+                        <div class="option-content">
+                            <div class="option-icon">💳</div>
+                            <div>
+                                <div class="option-title">PIX</div>
+                                <div class="option-subtitle">Aprovação instantânea</div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-option" data-testid="payment-boleto">
+                        <input type="radio" name="paymentMethod" value="BOLETO" />
+                        <div class="option-content">
+                            <div class="option-icon">📄</div>
+                            <div>
+                                <div class="option-title">Boleto</div>
+                                <div class="option-subtitle">Vencimento em 3 dias</div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-option" data-testid="payment-credit-card">
+                        <input type="radio" name="paymentMethod" value="CREDIT_CARD" />
+                        <div class="option-content">
+                            <div class="option-icon">💰</div>
+                            <div>
+                                <div class="option-title">Cartão de Crédito</div>
+                                <div class="option-subtitle">Parcele em até 12x</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- CHECKOUT FORM -->
+            <form id="checkoutForm" class="checkout-form" data-testid="checkout-form">
+
+                <div class="form-group">
+                    <label for="documentoCliente">CPF ou CNPJ do Responsável</label>
+                    <input
+                            type="text"
+                            id="documentoCliente"
+                            name="documentoCliente"
+                            placeholder="000.000.000-00"
+                            data-testid="documento-input"
+                            required
+                    />
+                </div>
+
+                <!-- CREDIT CARD FIELDS (CONDITIONAL) -->
+                <div id="creditCardFields" class="hidden">
+                    <div class="form-group">
+                        <label for="nomeNoCartao">Nome no Cartão</label>
+                        <input
+                                type="text"
+                                id="nomeNoCartao"
+                                name="nomeNoCartao"
+                                placeholder="Como está impresso no cartão"
+                                data-testid="nome-cartao-input"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numeroCartao">Número do Cartão</label>
+                        <input
+                                type="text"
+                                id="numeroCartao"
+                                name="numeroCartao"
+                                placeholder="0000 0000 0000 0000"
+                                data-testid="numero-cartao-input"
+                                maxlength="19"
+                        />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="validadeCartao">Validade</label>
+                            <input
+                                    type="text"
+                                    id="validadeCartao"
+                                    name="validadeCartao"
+                                    placeholder="MM/AA"
+                                    data-testid="validade-cartao-input"
+                                    maxlength="5"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input
+                                    type="text"
+                                    id="cvv"
+                                    name="cvv"
+                                    placeholder="000"
+                                    data-testid="cvv-input"
+                                    maxlength="4"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUMMARY -->
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span>Plano Empresarial</span>
+                        <span>R$ 49,90/mês</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>R$ 49,90</span>
+                    </div>
+                </div>
+
+                <button
+                        type="submit"
+                        class="btn-primary btn-large"
+                        data-testid="confirmar-pagamento-btn"
+                >
+                    Confirmar Pagamento
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/planos.js"></script>
+</body>
+</html>
