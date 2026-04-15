@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TaskFlow: Gestão simplificada para empresas e micro negócios acelerarem seus resultados.">
+    <meta name="author" content="TaskFlow Team">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>TaskFlow - Gestão Profissional</title>
+
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/favicon-16x16.png}">
+    <link rel="manifest" th:href="@{/site.webmanifest}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/landing.css}">
+</head>
+<body>
+
+<div class="bg-glow-center"></div>
+
+<header id="header">
+    <a th:href="@{/}" class="logo">Task<span>Flow</span></a>
+
+    <nav class="header-right">
+        <a href="#features" class="btn btn-nav">Detalhes</a>
+        <a href="#pricing-section" class="btn btn-nav">Preço</a>
+        <a href="https://wa.me/5511999999999" target="_blank" class="btn btn-nav">Suporte</a>
+
+        <a th:href="@{/login}" class="btn btn-outline">Login</a>
+        <a th:href="@{/login(mode='signup')}" class="btn btn-primary">Criar Conta</a>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-content-wrapper animate-fade">
+            <div class="hero-text">
+                <h1>Gestão que <span>acelera</span> sua empresa</h1>
+                <p>
+                    A solução completa para micro negócios: controle financeiro, orçamentos profissionais e gestão inteligente em uma única plataforma.
+                </p>
+
+                <div class="hero-btns">
+                    <a th:href="@{/login(mode='signup')}" class="btn btn-dark">Testar 7 dias grátis</a>
+                    <a href="#features" class="btn btn-outline">Conhecer recursos</a>
+                </div>
+
+                <div class="hero-benefits-glass">
+                    <div class="benefit-item"><i>✓</i> Pagamento facilitado</div>
+                    <div class="benefit-item"><i>✓</i> Sem fidelidade</div>
+                    <div class="benefit-item"><i>✓</i> Suporte especializado</div>
+                </div>
+            </div>
+
+            <div class="dashboard-carousel">
+                <div class="carousel-slide active">
+                    <img src="https://bs-uploads.toptal.io/blackfish-uploads/uploaded_file/file/465203/image-1607186163027-08f7f301d7d9bc30bbb10ceed33134a0.gif" alt="Interface de Gestão TaskFlow">
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200" alt="Interface Business Inteligente">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section" id="features">
+        <div class="features-grid">
+            <div class="dashboard-carousel animate-fade">
+                <div class="carousel-slide active">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000" alt="Relatórios e Gráficos de Fluxo de Caixa">
+                </div>
+            </div>
+
+            <div class="features-right">
+                <h2 class="animate-fade">Feito para o seu negócio</h2>
+                <ul class="features-list">
+                    <li class="feature-card animate-fade">
+                        <b class="feature-arrow">→</b>
+                        <div>
+                            <strong>Contratos PDF</strong><br>
+                            <small>Documentos 100% personalizáveis com sua logo.</small>
+                        </div>
+                    </li>
+                    <li class="feature-card animate-fade">
+                        <b class="feature-arrow">→</b>
+                        <div>
+                            <strong>Orçamentos Rápidos</strong><br>
+                            <small>Envie propostas e acompanhe o status de aprovação.</small>
+                        </div>
+                    </li>
+                    <li class="feature-card animate-fade">
+                        <b class="feature-arrow">→</b>
+                        <div>
+                            <strong>Fluxo de Caixa</strong><br>
+                            <small>Controle financeiro total e relatórios automáticos.</small>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section" id="pricing-section">
+        <h2 class="animate-fade">O plano ideal para o micro negócio</h2>
+        <div class="pricing-container">
+            <div class="price-card animate-fade">
+                <div class="badge">PLANO BUSINESS</div>
+                <h3>Acesso Completo</h3>
+                <div class="price">R$ 49,90<span>/mês</span></div>
+                <p>Gestão total do seu negócio sem limites de clientes ou contratos.</p>
+                <a th:href="@{/login(mode='signup')}" class="btn btn-primary btn-block-price">Assinar Agora</a>
+                <p class="price-footer-text">7 dias de teste gratuito. Cancele quando quiser.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <p class="logo">Task<span>Flow</span></p>
+        <p class="footer-copy">© 2026 TaskFlow - Sistema de Gestão Inteligente</p>
+        <div class="footer-links">
+            <a href="#">Privacidade</a>
+            <a href="#">Termos de Uso</a>
+            <a href="https://wa.me/5511999999999" class="whatsapp-support">Suporte WhatsApp</a>
+        </div>
+    </div>
+</footer>
+
+<script th:src="@{/js/landing.js}" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow | Gestão Inteligente</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+
+    <script th:src="@{/js/login.js}" defer></script>
+</head>
+<body>
+
+<div class="bg-blur">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+</div>
+
+<div class="auth-wrapper">
+    <div class="auth-container" id="authContainer">
+
+        <main class="side form-side">
+            <div class="form-content">
+                <div class="logo-area">
+                    <span class="logo-dot"></span>
+                    <span class="logo-text">TaskFlow</span>
+                </div>
+
+                <div id="authFeedback" class="feedback-toast"></div>
+
+                <header class="form-header">
+                    <h2 id="formTitle">Bem-vindo!</h2>
+                    <p id="formSubtitle">Insira suas credenciais de acesso.</p>
+                </header>
+
+                <form id="authForm" class="modern-form" novalidate>
+                    <div class="input-group" id="groupNome" style="display: none;">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="nome" placeholder="Seu nome ou empresa">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">E-mail Corporativo</label>
+                        <input type="email" id="email" placeholder="nome@empresa.com" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-wrapper">
+                            <label for="senha">Senha</label>
+                            <a href="#" class="link-forgot" id="forgotPass">Esqueceu a senha?</a>
+                        </div>
+                        <input type="password" id="senha" placeholder="••••••••" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <span>Acessar Plataforma</span>
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <aside class="side visual-side">
+            <div class="visual-overlay"></div>
+            <div class="visual-content">
+                <div class="badge">Acelera v2.0</div>
+                <h2 id="visualTitle">Novo por aqui?</h2>
+                <p id="visualText">
+                    Crie sua conta agora e comece a organizar sua empresa com inteligência.
+                </p>
+
+                <button class="btn-outline-white" id="switchBtn" onclick="toggleAuth()">
+                    Criar Conta Grátis
+                </button>
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+</body>
+</html>

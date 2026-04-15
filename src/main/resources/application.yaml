@@ -1,0 +1,87 @@
+spring:
+  application:
+    name: Taskflow Gerenciamento
+
+  # Configuração do Thymeleaf e Recursos (Adicionado e consolidado aqui)
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    check-template-location: true
+
+  web:
+    resources:
+      static-locations: classpath:/static/
+      add-mappings: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/TaskFlow-V2
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: morilla.bsm@gmail.com
+    password: teste
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+asaas:
+  url: ${ASAAS_URL:https://sandbox.asaas.com/v3}
+  chave: ${aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjI2M2I5ODk0LWZjOTgtNDE5Yi04ZGQ4LTYzMTc0NGU0YzcwNjo6JGFhY2hfMGYzZWY5ZWMtYzI0My00ZmNmLWE4NDktOGNkYTFkY2Y1NmQ1}
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:4wdv87e/KfQ9dxREsR1C/RJeUSWXccRB1LUVWku6RM0=}
+  expiration:
+    access: 3600000        # 1 hora
+    refresh: 86400000       # 24 horas
+  issuer: taskflow-api
+  audience: taskflow-client
+
+logging:
+  config: classpath:logback.xml
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: alpha
+    tagsSorter: alpha
+
+
+
+
+
+

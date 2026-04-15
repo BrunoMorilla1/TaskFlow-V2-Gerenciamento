@@ -1,0 +1,226 @@
+src/main/java/br/com/taskflow
+
+br.com.taskflow
+
+    TaskflowApplication
+
+    configuracao
+        ConfiguracaoWeb
+        ConfiguracaoCors
+        ConfiguracaoBanco
+        ConfiguracaoJpa
+        ConfiguracaoJackson
+        ConfiguracaoCache
+        ConfiguracaoAsync
+        ConfiguracaoSwagger
+        ConfiguracaoThymeleaf
+
+    seguranca
+        configuracao
+            ConfiguracaoSeguranca
+        jwt
+            ProvedorTokenJwt
+            UtilJwt
+            FiltroAutenticacaoJwt
+            ManipuladorAutenticacaoJwt
+        autenticacao
+            ServicoUsuarioDetalhes
+            UsuarioAutenticado
+        permissao
+            Papel
+            Permissao
+            EnumPapel
+        criptografia
+            ServicoCriptografiaSenha
+        protecao
+            FiltroRateLimit
+            DetectorBruteForce
+            FiltroHeadersSeguranca
+
+    logs
+        AspectoLogAplicacao
+        FiltroLogRequisicao
+        LoggerAuditoria
+        LoggerSeguranca
+
+    excecoes
+        ExcecaoNegocio
+        ExcecaoNaoEncontrado
+        ExcecaoNaoAutorizado
+        ExcecaoValidacao
+        ExcecaoSistema
+        ManipuladorGlobalExcecoes
+
+    utils
+        UtilData
+        UtilString
+        UtilNumero
+        UtilMoeda
+        UtilCpfCnpj
+        UtilSenha
+        UtilJson
+        UtilArquivo
+        UtilValidacao
+
+    auditoria
+        AuditorSistema
+        AuditorBanco
+        RegistroAuditoria
+
+    monitoramento
+        ServicoMetricas
+        ServicoHealthCheck
+
+    constantes
+        ConstantesSistema
+        ConstantesSeguranca
+        ConstantesFinanceiro
+        RotasApi
+
+    integracoes
+        whatsapp
+            ServicoWhatsapp
+            ClienteApiWhatsapp
+        email
+            ServicoEmail
+            ClienteSmtp
+        sms
+            ServicoSms
+
+    armazenamento
+        ServicoArmazenamentoArquivo
+        ServicoArmazenamentoImagem
+        ServicoArmazenamentoPdf
+
+    notificacoes
+        ServicoNotificacao
+        NotificacaoEmail
+        NotificacaoWhatsapp
+
+    autenticacao
+        controladores
+            ControladorAutenticacao
+        servicos
+            ServicoAutenticacao
+        repositorios
+            RepositorioUsuario
+            RepositorioPapel
+        entidades
+            Usuario
+            PapelUsuario
+        dtos
+            RequisicaoLogin
+            RespostaLogin
+            RequisicaoRegistro
+
+    empresas
+        controladores
+            ControladorEmpresa
+        servicos
+            ServicoEmpresa
+        repositorios
+            RepositorioEmpresa
+        entidades
+            Empresa
+        dtos
+            EmpresaRequest
+            EmpresaResponse
+        validacoes
+            ValidadorEmpresa
+
+    clientes
+        controladores
+            ControladorCliente
+        servicos
+            ServicoCliente
+        repositorios
+            RepositorioCliente
+        entidades
+            Cliente
+        dtos
+            ClienteRequest
+            ClienteResponse
+
+    funcionarios
+        controladores
+            ControladorFuncionario
+        servicos
+            ServicoFuncionario
+        repositorios
+            RepositorioFuncionario
+        entidades
+            Funcionario
+        dtos
+            FuncionarioRequest
+            FuncionarioResponse
+
+    produtoestoque
+        controladores
+            ControladorProduto
+            ControladorEstoque
+        servicos
+            ServicoProduto
+            ServicoEstoque
+        repositorios
+            RepositorioProduto
+            RepositorioEstoque
+        entidades
+            Produto
+            MovimentacaoEstoque
+        dtos
+            ProdutoRequest
+            ProdutoResponse
+            MovimentacaoEstoqueRequest
+
+    financeiro
+        controladores
+            ControladorFinanceiro
+        servicos
+            ServicoFinanceiro
+        repositorios
+            RepositorioFinanceiro
+        entidades
+            LancamentoFinanceiro
+            OrdemPagamento
+        dtos
+            PagamentoRequest
+            PagamentoResponse
+
+    ordensservico
+        controladores
+            ControladorOrdemServico
+        servicos
+            ServicoOrdemServico
+        repositorios
+            RepositorioOrdemServico
+        entidades
+            OrdemServico
+        dtos
+            OrdemServicoRequest
+
+    orcamentos
+        controladores
+            ControladorOrcamento
+        servicos
+            ServicoOrcamento
+        repositorios
+            RepositorioOrcamento
+        entidades
+            Orcamento
+            ItemOrcamento
+        pdf
+            GeradorPdfOrcamento
+            TemplatePdfOrcamento
+        dtos
+            OrcamentoRequest
+
+    relatorios
+        controladores
+            ControladorRelatorio
+        servicos
+            ServicoRelatorioFinanceiro
+            ServicoRelatorioEstoque
+            ServicoRelatorioFuncionarios
+        dtos
+            RelatorioFinanceiroResponse
+            RelatorioEstoqueResponse
