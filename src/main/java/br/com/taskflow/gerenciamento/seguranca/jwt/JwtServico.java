@@ -1,32 +1,31 @@
 package br.com.taskflow.gerenciamento.seguranca.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.security.converter.RsaKeyConverters;
 
 import java.security.Key;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.*;
 import java.util.function.Function;
 
-@Service
+@Component
 @Slf4j
 public class JwtServico {
 
+    // =========================
+    // CLAIMS
+    // =========================
     private static final String CLAIM_ROLE = "role";
     private static final String CLAIM_EMPRESA_ID = "empresaId";
     private static final String CLAIM_TYPE = "type";
@@ -34,9 +33,9 @@ public class JwtServico {
     private static final String TOKEN_TYPE_ACCESS = "ACCESS";
     private static final String TOKEN_TYPE_REFRESH = "REFRESH";
 
-    @Value("${jwt.secret}")
-    private String chaveSecreta;
-
+    // =========================
+    // CONFIG
+    // =========================
     @Value("${jwt.expiration.access}")
     private long expiracaoAccessToken;
 
@@ -49,21 +48,84 @@ public class JwtServico {
     @Value("${jwt.audience}")
     private String audience;
 
-    private Key obterChaveAssinatura() {
-        byte[] keyBytes = Decoders.BASE64.decode(chaveSecreta);
-        return Keys.hmacShaKeyFor(keyBytes);
+    // =========================
+    // RSA KEYS (ENTERPRISE SAFE)
+    // =========================
+    private final PrivateKey privateKey;
+    private final PublicKey publicKey;
+
+    private final Clock clock = Clock.systemUTC();
+
+    public JwtServico(
+            @Value("classpath:jwt/private.pem") Resource privateKeyResource,
+            @Value("classpath:jwt/public.pem") Resource publicKeyResource
+    ) {
+        try {
+            this.privateKey = RsaKeyConverters.pkcs8().convert(privateKeyResource.getInputStream());
+            this.publicKey = RsaKeyConverters.x509().convert(publicKeyResource.getInputStream());
+        } catch (Exception e) {
+            throw new IllegalStateException("Falha ao carregar chaves RSA do JWT", e);
+        }
     }
+
+    // =========================================================
+    // GERAÇÃO DE TOKENS
+    // =========================================================
+
+    public String gerarAccessToken(UserDetails user, String empresaId) {
+        validarUser(user);
+
+        Instant now = Instant.now(clock);
+        String jti = UUID.randomUUID().toString();
+
+        return Jwts.builder()
+                .setId(jti)
+                .setSubject(user.getUsername())
+                .claim(CLAIM_ROLE, extrairRoles(user.getAuthorities()))
+                .claim(CLAIM_EMPRESA_ID, normalizar(empresaId))
+                .claim(CLAIM_TYPE, TOKEN_TYPE_ACCESS)
+                .setIssuer(issuer)
+                .setAudience(audience)
+                .setIssuedAt(Date.from(now))
+                .setNotBefore(Date.from(now))
+                .setExpiration(Date.from(now.plusMillis(expiracaoAccessToken)))
+                .signWith(privateKey, SignatureAlgorithm.RS256)
+                .compact();
+    }
+
+    public String gerarRefreshToken(UserDetails user) {
+        validarUser(user);
+
+        Instant now = Instant.now(clock);
+        String jti = UUID.randomUUID().toString();
+
+        return Jwts.builder()
+                .setId(jti)
+                .setSubject(user.getUsername())
+                .claim(CLAIM_TYPE, TOKEN_TYPE_REFRESH)
+                .setIssuer(issuer)
+                .setAudience(audience)
+                .setIssuedAt(Date.from(now))
+                .setNotBefore(Date.from(now))
+                .setExpiration(Date.from(now.plusMillis(expiracaoRefreshToken)))
+                .signWith(privateKey, SignatureAlgorithm.RS256)
+                .compact();
+    }
+
+    // =========================================================
+    // EXTRAÇÃO (compatível com seu sistema atual)
+    // =========================================================
 
     public String extrairEmail(String token) {
         return extrairClaim(token, Claims::getSubject);
     }
 
     public String extrairEmpresaId(String token) {
-        return extrairClaim(token, claims -> claims.get(CLAIM_EMPRESA_ID, String.class));
+        return extrairClaim(token, c -> c.get(CLAIM_EMPRESA_ID, String.class));
     }
 
     public String extrairRole(String token) {
-        return extrairClaim(token, claims -> claims.get(CLAIM_ROLE, String.class));
+        return extrairClaim(token, c -> c.get(CLAIM_ROLE, String.class));
     }
 
     public String extrairTokenId(String token) {
@@ -71,7 +133,7 @@ public class JwtServico {
     }
 
     public String extrairTipoToken(String token) {
-        return extrairClaim(token, claims -> claims.get(CLAIM_TYPE, String.class));
+        return extrairClaim(token, c -> c.get(CLAIM_TYPE, String.class));
     }
 
     public Date extrairExpiracao(String token) {
@@ -82,161 +144,94 @@ public class JwtServico {
         return extrairClaim(token, Claims::getIssuedAt);
     }
 
-    public long getExpiracaoAccessTokenEmSegundos() {
-        return expiracaoAccessToken / 1000;
-    }
-
-    public long getExpiracaoRefreshTokenEmSegundos() {
-        return expiracaoRefreshToken / 1000;
-    }
-
     public <T> T extrairClaim(String token, Function<Claims, T> resolver) {
-        Objects.requireNonNull(resolver, "O resolvedor de claims é obrigatório.");
-        Claims claims = extrairTodosClaims(token);
-        return resolver.apply(claims);
+        return resolver.apply(extrairClaims(token));
     }
 
-    private Claims extrairTodosClaims(String token) {
-        validarTokenInformado(token);
+    // =========================================================
+    // VALIDAÇÃO ENTERPRISE
+    // =========================================================
 
+    public boolean validarAccessToken(String token, UserDetails user) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(obterChaveAssinatura())
-                    .requireIssuer(issuer)
-                    .requireAudience(audience)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            Claims claims = extrairClaims(token);
 
-        } catch (ExpiredJwtException ex) {
-            log.warn("JwtServico - Token expirado.");
-            throw ex;
+            return TOKEN_TYPE_ACCESS.equals(claims.get(CLAIM_TYPE, String.class))
+                    && claims.getSubject().equals(user.getUsername())
+                    && !isExpired(claims);
 
-        } catch (UnsupportedJwtException ex) {
-            log.warn("JwtServico - Token não suportado.");
-            throw ex;
-
-        } catch (MalformedJwtException ex) {
-            log.warn("JwtServico - Token malformado.");
-            throw ex;
-
-        } catch (SignatureException ex) {
-            log.warn("JwtServico - Assinatura do token inválida.");
-            throw ex;
-
-        } catch (IllegalArgumentException ex) {
-            log.warn("JwtServico - Token vazio ou inválido.");
-            throw ex;
-        }
-    }
-
-    public String gerarAccessToken(UserDetails userDetails, String empresaId) {
-        validarUserDetails(userDetails);
-
-        Date agora = new Date();
-        Date expiracao = new Date(agora.getTime() + expiracaoAccessToken);
-        String tokenId = UUID.randomUUID().toString();
-
-        return Jwts.builder()
-                .setId(tokenId)
-                .setSubject(userDetails.getUsername())
-                .claim(CLAIM_ROLE, extrairPrimeiraAuthority(userDetails.getAuthorities()))
-                .claim(CLAIM_EMPRESA_ID, empresaId)
-                .claim(CLAIM_TYPE, TOKEN_TYPE_ACCESS)
-                .setIssuer(issuer)
-                .setAudience(audience)
-                .setIssuedAt(agora)
-                .setNotBefore(agora)
-                .setExpiration(expiracao)
-                .signWith(obterChaveAssinatura(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    public String gerarRefreshToken(UserDetails userDetails) {
-        validarUserDetails(userDetails);
-
-        Date agora = new Date();
-        Date expiracao = new Date(agora.getTime() + expiracaoRefreshToken);
-        String tokenId = UUID.randomUUID().toString();
-
-        return Jwts.builder()
-                .setId(tokenId)
-                .setSubject(userDetails.getUsername())
-                .claim(CLAIM_TYPE, TOKEN_TYPE_REFRESH)
-                .setIssuer(issuer)
-                .setAudience(audience)
-                .setIssuedAt(agora)
-                .setNotBefore(agora)
-                .setExpiration(expiracao)
-                .signWith(obterChaveAssinatura(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    public boolean validarAccessToken(String token, UserDetails userDetails) {
-        validarUserDetails(userDetails);
-
-        try {
-            String email = extrairEmail(token);
-            String tipo = extrairTipoToken(token);
-
-            if (!TOKEN_TYPE_ACCESS.equals(tipo)) {
-                log.warn("JwtServico - Token informado não é do tipo ACCESS.");
-                return false;
-            }
-
-            return email.equals(userDetails.getUsername()) && !tokenExpirado(token);
-
-        } catch (JwtException ex) {
-            log.warn("JwtServico - Falha na validação do access token: {}", ex.getMessage());
+        } catch (Exception e) {
+            log.warn("Access token inválido: {}", e.getMessage());
             return false;
         }
     }
 
     public boolean validarRefreshToken(String token) {
         try {
-            String tipo = extrairTipoToken(token);
+            Claims claims = extrairClaims(token);
 
-            if (!TOKEN_TYPE_REFRESH.equals(tipo)) {
-                log.warn("JwtServico - Token informado não é do tipo REFRESH.");
-                return false;
-            }
+            return TOKEN_TYPE_REFRESH.equals(claims.get(CLAIM_TYPE, String.class))
+                    && !isExpired(claims);
 
-            return !tokenExpirado(token);
-
-        } catch (JwtException ex) {
-            log.warn("JwtServico - Falha na validação do refresh token: {}", ex.getMessage());
+        } catch (Exception e) {
+            log.warn("Refresh token inválido: {}", e.getMessage());
             return false;
         }
     }
 
-    public boolean tokenExpirado(String token) {
-        return extrairExpiracao(token).before(new Date());
+    private Claims extrairClaims(String token) {
+        validarToken(token);
+
+        return Jwts.parserBuilder()
+                .setSigningKey(publicKey)
+                .requireIssuer(issuer)
+                .requireAudience(audience)
+                .setAllowedClockSkewSeconds(30)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
-    private void validarTokenInformado(String token) {
+    private boolean isExpired(Claims claims) {
+        return claims.getExpiration().before(new Date());
+    }
+
+    // =========================================================
+    // UTILITÁRIOS
+    // =========================================================
+
+    private void validarToken(String token) {
         if (token == null || token.isBlank()) {
-            throw new IllegalArgumentException("O token JWT é obrigatório.");
+            throw new IllegalArgumentException("Token JWT obrigatório");
         }
     }
 
-    private void validarUserDetails(UserDetails userDetails) {
-        if (userDetails == null) {
-            throw new IllegalArgumentException("Os dados do usuário são obrigatórios para gerar/validar token.");
-        }
+    private void validarUser(UserDetails user) {
+        Objects.requireNonNull(user, "UserDetails obrigatório");
 
-        if (userDetails.getUsername() == null || userDetails.getUsername().isBlank()) {
-            throw new IllegalArgumentException("O username do usuário é obrigatório.");
+        if (user.getUsername() == null || user.getUsername().isBlank()) {
+            throw new IllegalArgumentException("Username obrigatório");
         }
     }
 
-    private String extrairPrimeiraAuthority(Collection<? extends GrantedAuthority> authorities) {
-        if (authorities == null || authorities.isEmpty()) {
-            throw new IllegalArgumentException("O usuário deve possuir pelo menos uma authority.");
-        }
-
-        return authorities.stream()
-                .findFirst()
+    private String extrairRoles(Collection<? extends GrantedAuthority> auth) {
+        return auth.stream()
                 .map(GrantedAuthority::getAuthority)
-                .orElseThrow(() -> new IllegalArgumentException("Não foi possível extrair a authority do usuário."));
+                .reduce((a, b) -> a + "," + b)
+                .orElse("");
+    }
+
+    private String normalizar(String value) {
+        if (value == null) return null;
+        String v = value.trim();
+        return v.isBlank() ? null : v;
+    }
+
+    public long getExpiracaoAccessTokenEmSegundos() {
+        return expiracaoAccessToken / 1000;
+    }
+
+    public long getExpiracaoRefreshTokenEmSegundos() {
+        return expiracaoRefreshToken / 1000;
     }
 }

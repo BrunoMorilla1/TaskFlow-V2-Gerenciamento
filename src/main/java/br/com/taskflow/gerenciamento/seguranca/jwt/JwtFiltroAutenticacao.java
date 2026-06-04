@@ -60,7 +60,6 @@ public class JwtFiltroAutenticacao extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // 1. Tratamento de Preflight (CORS) para evitar erro "Found: 0 periods" em OPTIONS
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             return;
@@ -73,7 +72,6 @@ public class JwtFiltroAutenticacao extends OncePerRequestFilter {
             String token = extrairBearerToken(request);
 
             if (StringUtils.hasText(token)) {
-                // 2. Validação Estrutural Rígida: Impede que tokens malformados quebrem o parser
                 if (token.split("\\.").length != 3) {
                     log.warn("JwtFiltroAutenticacao - Estrutura de token inválida. ip={}, ua={}", ip, userAgent);
                     limparContextos();
@@ -95,7 +93,6 @@ public class JwtFiltroAutenticacao extends OncePerRequestFilter {
             limparContextos();
             handlerSegurancaException.tratarTokenInvalido(request, response);
         } finally {
-            // Segurança de ThreadLocal: Limpa o Tenant se a autenticação falhar ou terminar
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 TenantContext.clear();
             }
@@ -116,7 +113,6 @@ public class JwtFiltroAutenticacao extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                // Define o contexto multi-tenant para a transação atual
                 TenantContext.setTenant(empresaId);
 
                 log.debug("JwtFiltroAutenticacao - Autenticado: email={}, empresaId={}, ip={}", email, empresaId, ip);

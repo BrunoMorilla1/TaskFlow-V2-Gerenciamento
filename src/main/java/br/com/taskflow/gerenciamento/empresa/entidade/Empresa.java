@@ -1,5 +1,6 @@
 package br.com.taskflow.gerenciamento.empresa.entidade;
 
+import br.com.taskflow.gerenciamento.empresa.enums.Segmentos;
 import br.com.taskflow.gerenciamento.empresa.enums.StatusEmpresa;
 import br.com.taskflow.gerenciamento.usuarios.entidade.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -94,6 +95,10 @@ public class Empresa {
     @Column(name = "cep", length = 8)
     private String cep;
 
+    @Column(name = "segmentos", length = 30)
+    @Enumerated(EnumType.STRING)
+    private Segmentos segmentos;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     @Builder.Default
@@ -130,13 +135,11 @@ public class Empresa {
     @Column(name = "deletado", nullable = false)
     private boolean deletado = false;
 
-    // --- LÓGICA DE PRODUÇÃO: O PULO DO GATO ---
-
     @PrePersist
     @PreUpdate
     private void prePersistAndUpdate() {
         normalizarCampos();
-        contingenciaParaFalhaDeApi(); // Tenta salvar a Razão Social se ela estiver nula
+        contingenciaParaFalhaDeApi();
         validarCamposObrigatorios();
     }
 
@@ -158,17 +161,14 @@ public class Empresa {
     }
 
     private void contingenciaParaFalhaDeApi() {
-        // Se a Razão Social está nula (API falhou), mas você mandou o Fantasia no Postman
         if (isVazio(this.razaoSocial) && !isVazio(this.nomeFantasia)) {
             this.razaoSocial = this.nomeFantasia;
         }
 
-        // Se ainda assim estiver nula (você não mandou nada), usa o CNPJ como nome temporário
         if (isVazio(this.razaoSocial) && !isVazio(this.cnpj)) {
             this.razaoSocial = "EMPRESA CNPJ: " + this.cnpj;
         }
 
-        // Se o Fantasia está vazio, preenche com a Razão Social
         if (isVazio(this.nomeFantasia) && !isVazio(this.razaoSocial)) {
             this.nomeFantasia = this.razaoSocial;
         }
@@ -192,8 +192,6 @@ public class Empresa {
     private boolean isVazio(String texto) {
         return texto == null || texto.trim().isEmpty();
     }
-
-    // --- MÉTODOS DE NEGÓCIO ---
 
     public void ativar() { this.ativo = true; }
     public void inativar() { this.ativo = false; }

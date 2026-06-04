@@ -5,6 +5,7 @@ const loading = document.getElementById('loadingOverlay');
 const alertContainer = document.getElementById('alertContainer');
 
 let debounceTimer;
+let consultaEmAndamento = false;
 
 function showLoading() {
     loading.style.display = 'flex';
@@ -15,104 +16,125 @@ function hideLoading() {
 }
 
 function showAlert(message, type = 'error') {
-    alertContainer.innerHTML = `
-        <div class=\"alert alert-${type}\">
-            ${message}
-        </div>
-    `;
-
+    alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
     setTimeout(() => {
         alertContainer.innerHTML = '';
     }, 5000);
 }
 
 function onlyNumbers(value) {
+    if (!value) return '';
     return value.replace(/\D/g, '');
 }
 
 function setValid(el) {
-    el.style.borderColor = '#10b981';
+    if (el) el.style.borderColor = '#10b981';
 }
 
 function setInvalid(el) {
-    el.style.borderColor = '#ef4444';
+    if (el) el.style.borderColor = '#ef4444';
 }
 
 function resetBorder(el) {
-    el.style.borderColor = '';
+    if (el) el.style.borderColor = '';
 }
 
-// ==================== CNPJ MASK ====================
+function validarCnpj(cnpj) {
+    cnpj = onlyNumbers(cnpj);
+    if (cnpj.length !== 14) return false;
+    if (/^(\d)\1{13}$/.test(cnpj)) return false;
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += Number(numeros.charAt(tamanho - i)) * pos--;
+        if (pos < 2) pos = 9;
+    }
+    let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado !== parseInt(digitos.charAt(0), 10)) return false;
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += Number(numeros.charAt(tamanho - i)) * pos--;
+        if (pos < 2) pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    return resultado === parseInt(digitos.charAt(1), 10);
+}
+
 cnpjInput.addEventListener('input', (e) => {
     let v = onlyNumbers(e.target.value);
-    
     if (v.length > 14) v = v.slice(0, 14);
-    
-    // Format: 00.000.000/0000-00
     v = v.replace(/^(\d{2})(\d)/, '$1.$2');
     v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
     v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
     v = v.replace(/(\d{4})(\d)/, '$1-$2');
-    
     e.target.value = v;
-
-    if (onlyNumbers(v).length === 14) {
+    const cnpjLimpo = onlyNumbers(v);
+    if (cnpjLimpo.length === 14) {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => consultarCnpj(), 600);
+        debounceTimer = setTimeout(() => {
+            if (validarCnpj(cnpjLimpo)) {
+                consultarCnpj();
+            } else {
+                setInvalid(cnpjInput);
+                showAlert('⚠️ CNPJ inválido.', 'error');
+            }
+        }, 800);
+    } else {
+        resetBorder(cnpjInput);
     }
 });
 
 async function consultarCnpj(retry = 1) {
     const cnpj = onlyNumbers(cnpjInput.value);
-    
-    if (cnpj.length !== 14) {
+    if (cnpj.length !== 14 || !validarCnpj(cnpj)) {
         setInvalid(cnpjInput);
-        showAlert('CNPJ inválido. Digite um CNPJ com 14 dígitos.', 'error');
+        showAlert('❌ CNPJ inválido.', 'error');
         return;
     }
-    
+    if (consultaEmAndamento) return;
+    clearTimeout(debounceTimer);
+    consultaEmAndamento = true;
     showLoading();
     btnConsultar.disabled = true;
+    btnConsultar.textContent = 'Consultando...';
     resetBorder(cnpjInput);
-    
     try {
         const response = await fetch(`/api/v1/empresas/consultar-cnpj/${cnpj}`, {
             method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            },
-            credentials: 'include'
+            headers: { 'Accept': 'application/json' }
         });
-        
         if (!response.ok) {
             if (response.status === 404) {
-                throw new Error('CNPJ não encontrado na base da Receita Federal');
+                showAlert('⚠️ CNPJ não encontrado. Preencha manualmente.', 'warning');
+                revelarFormulario();
+                setValid(cnpjInput);
+                return;
             }
-            throw new Error('Erro ao consultar CNPJ');
+            throw new Error(`Erro ao consultar CNPJ.`);
         }
-        
         const data = await response.json();
-        
         preencherFormulario(data);
         revelarFormulario();
-        
         setValid(cnpjInput);
-        showAlert('Dados da empresa encontrados com sucesso!', 'success');
-        
+        showAlert('✅ Dados encontrados!', 'success');
     } catch (error) {
-        console.error('Erro ao consultar CNPJ:', error);
-        
-        if (retry > 0) {
-            console.log('Tentando novamente...');
+        if (retry > 0 && error.message.includes('Failed to fetch')) {
+            consultaEmAndamento = false;
             return consultarCnpj(retry - 1);
         }
-        
         setInvalid(cnpjInput);
-        showAlert(error.message || 'Erro ao buscar CNPJ. Tente novamente.', 'error');
-        
+        showAlert('❌ ' + error.message, 'error');
     } finally {
         hideLoading();
         btnConsultar.disabled = false;
+        btnConsultar.textContent = 'Consultar';
+        consultaEmAndamento = false;
     }
 }
 
@@ -120,137 +142,87 @@ btnConsultar.addEventListener('click', () => consultarCnpj());
 
 function revelarFormulario() {
     form.classList.remove('hidden');
-    
-    // Smooth animation
-    form.style.opacity = '0';
-    form.style.transform = 'translateY(10px)';
-    
-    requestAnimationFrame(() => {
-        form.style.transition = 'all 0.4s ease';
-        form.style.opacity = '1';
-        form.style.transform = 'translateY(0)';
-    });
 }
 
 function preencherFormulario(data) {
-    setField('razaoSocial', data.razao_social || data.nome);
-    setField('nomeFantasia', data.nome_fantasia || data.fantasia);
+    setField('razaoSocial', data.razaoSocial || data.razao_social || data.nome);
+    setField('nomeFantasia', data.nomeFantasia || data.nome_fantasia || data.fantasia);
     setField('email', data.email);
     setField('telefone', data.telefone || data.ddd_telefone_1);
+    const select = document.getElementById("segmentos");
+    if (data.segmentos && select) select.value = data.segmentos;
+    setField('inscricaoEstadual', data.inscricaoEstadual || data.inscricao_estadual);
+    setField('inscricaoMunicipal', data.inscricaoMunicipal || data.inscricao_municipal);
+    setField('site', data.site);
+}
 
-    if (data.logradouro) setField('logradouro', data.logradouro);
-    if (data.numero) setField('numero', data.numero);
-    if (data.bairro) setField('bairro', data.bairro);
-    if (data.municipio) setField('municipio', data.municipio);
-    if (data.uf) setField('uf', data.uf);
-    if (data.cep) setField('cep', data.cep);
+async function carregarSegmentos() {
+    const select = document.getElementById("segmentos");
+    if (!select) return;
+    try {
+        const response = await fetch("/api/v1/empresas/segmentos");
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        select.innerHTML = '<option value="" disabled selected>Selecione um segmento</option>';
+        data.forEach(seg => {
+            const option = document.createElement("option");
+            option.value = seg.value || seg.name || seg;
+            option.textContent = seg.label || seg.nome || seg;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        showAlert("Erro ao carregar segmentos", "error");
+    }
 }
 
 function setField(id, value) {
     const el = document.getElementById(id);
-    if (!el) return;
-    
-    el.value = value || '';
-    if (value) setValid(el);
+    if (el) {
+        el.value = value || '';
+        if (value) setValid(el);
+    }
 }
 
-form.querySelectorAll('input').forEach(input => {
-    input.addEventListener('blur', () => {
-        if (input.required && !input.value.trim()) {
-            setInvalid(input);
-        } else if (input.value.trim()) {
-            setValid(input);
-        } else {
-            resetBorder(input);
-        }
-    });
-    
-    input.addEventListener('focus', () => {
-        resetBorder(input);
-    });
-});
-
-// ==================== PHONE MASK ====================
-const telefoneInput = document.getElementById('telefone');
-if (telefoneInput) {
-    telefoneInput.addEventListener('input', (e) => {
-        let value = onlyNumbers(e.target.value);
-        
-        if (value.length <= 10) {
-            // (00) 0000-0000
-            value = value.replace(/^(\d{2})(\d)/, '($1) $2');
-            value = value.replace(/(\d{4})(\d)/, '$1-$2');
-        } else {
-            // (00) 00000-0000
-            value = value.slice(0, 11);
-            value = value.replace(/^(\d{2})(\d)/, '($1) $2');
-            value = value.replace(/(\d{5})(\d)/, '$1-$2');
-        }
-        
-        e.target.value = value;
-    });
-}
-
-// ==================== FORM SUBMISSION ====================
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    // Build payload
     const formData = new FormData(form);
     const payload = {
-        cnpj: onlyNumbers(formData.get('cnpj') || cnpjInput.value),
+        cnpj: onlyNumbers(cnpjInput.value),
         razaoSocial: formData.get('razaoSocial'),
         nomeFantasia: formData.get('nomeFantasia'),
         email: formData.get('email'),
         telefone: onlyNumbers(formData.get('telefone')),
+        segmentos: formData.get('segmentos'),
         inscricaoEstadual: formData.get('inscricaoEstadual'),
         inscricaoMunicipal: formData.get('inscricaoMunicipal'),
         site: formData.get('site')
     };
-    
-    // Validate required fields
-    if (!payload.cnpj || payload.cnpj.length !== 14) {
-        showAlert('CNPJ é obrigatório e deve ter 14 dígitos.', 'error');
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        window.location.href = '/login';
         return;
     }
-    
     showLoading();
-    
     try {
         const response = await fetch('/api/v1/empresas', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Authorization': `Bearer ${token}`
             },
-            credentials: 'include',
             body: JSON.stringify(payload)
         });
-        
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.mensagem || 'Erro ao cadastrar empresa');
-        }
-        
-        const data = await response.json();
-        
-        // Success - redirect to planos page
-        showAlert('Empresa cadastrada com sucesso!', 'success');
-        
-        setTimeout(() => {
-            window.location.href = '/planos';
-        }, 1000);
-        
+        if (!response.ok) throw new Error('Erro ao cadastrar empresa');
+        showAlert('✅ Empresa cadastrada!', 'success');
+        setTimeout(() => { window.location.href = '/planos'; }, 1200);
     } catch (error) {
-        console.error('Erro ao cadastrar empresa:', error);
-        showAlert(error.message || 'Erro ao cadastrar empresa. Tente novamente.', 'error');
+        showAlert('❌ ' + error.message, 'error');
     } finally {
         hideLoading();
     }
 });
 
-// ==================== PAGE LOAD ====================
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Página de cadastro de empresa carregada');
+document.addEventListener("DOMContentLoaded", () => {
+    carregarSegmentos();
     cnpjInput.focus();
 });

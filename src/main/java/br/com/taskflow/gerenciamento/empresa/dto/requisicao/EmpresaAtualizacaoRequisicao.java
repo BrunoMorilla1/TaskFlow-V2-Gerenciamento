@@ -1,5 +1,7 @@
 package br.com.taskflow.gerenciamento.empresa.dto.requisicao;
 
+import br.com.taskflow.gerenciamento.empresa.enums.Segmentos;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
@@ -28,7 +30,9 @@ public record EmpresaAtualizacaoRequisicao(
         String inscricaoMunicipal,
 
         @Size(max = 200, message = "O site deve ter no máximo 200 caracteres.")
-        String site
+        String site,
+
+        Segmentos segmentos
 
 ) {
 }

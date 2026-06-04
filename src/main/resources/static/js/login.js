@@ -1,171 +1,172 @@
-/**
- * TASKFLOW - AUTH LOGIC (PRO VERSION)
- * Gerencia a autenticação, estados da UI e integração com a API Spring Boot.
- */
-
 'use strict';
 
+/**
+ * Taskflow Auth Control - Enterprise Version
+ */
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Seletores Principais
-    const container = document.getElementById('authContainer');
-    const authForm = document.getElementById('authForm');
-    const feedback = document.getElementById('authFeedback');
+    // FUNÇÃO AUXILIAR: Busca a config de forma segura para evitar o erro de "undefined"
+    const getSafeConfig = () => {
+        return window.TASKFLOW_CONFIG || {
+            API_BASE_URL: "http://localhost:8080",
+            ROUTES: { LOGIN: "/login", PLANOS: "/planos" }
+        };
+    };
 
-    // Elementos Dinâmicos da UI
-    const formTitle = document.getElementById('formTitle');
-    const formSubtitle = document.getElementById('formSubtitle');
-    const submitBtn = document.getElementById('submitBtn');
-    const visualTitle = document.getElementById('visualTitle');
-    const visualText = document.getElementById('visualText');
-    const switchBtn = document.getElementById('switchBtn');
-    const linkForgot = document.getElementById('forgotPass'); // Seletor para esqueci senha
+    // ==================== ELEMENTOS DO DOM ====================
+    const el = {
+        container:    document.getElementById('authContainer'),
+        authForm:     document.getElementById('authForm'),
+        feedback:     document.getElementById('authFeedback'),
+        formTitle:    document.getElementById('formTitle'),
+        formSubtitle: document.getElementById('formSubtitle'),
+        submitBtn:    document.getElementById('submitBtn'),
+        visualTitle:  document.getElementById('visualTitle'),
+        visualText:   document.getElementById('visualText'),
+        switchBtn:    document.getElementById('switchBtn'),
+        linkForgot:   document.getElementById('forgotPass'),
+        groupNome:    document.getElementById('groupNome'),
+        inputNome:    document.getElementById('nome'),
+        inputEmail:   document.getElementById('email'),
+        inputSenha:   document.getElementById('senha')
+    };
 
-    // Inputs
-    const groupNome = document.getElementById('groupNome');
-    const inputNome = document.getElementById('nome');
-    const inputEmail = document.getElementById('email');
-    const inputSenha = document.getElementById('senha');
+    if (!el.authForm) return; // Proteção caso o script carregue em página sem form
 
     let isSignup = false;
 
-    /**
-     * Alterna entre os modos Login e Cadastro
-     */
+    // ==================== UI CONTROLLER ====================
+
     window.toggleAuth = () => {
         isSignup = !isSignup;
-
-        container.classList.toggle('is-signup');
+        el.container.classList.toggle('is-signup');
         hideFeedback();
-        authForm.reset();
+        el.authForm.reset();
 
-        if (isSignup) {
-            updateUI(
-                "Crie sua conta",
-                "Preencha os dados abaixo para começar.",
-                "Cadastrar Agora",
-                "Já é de casa?",
-                "Acesse sua conta para gerenciar seus resultados.",
-                "Fazer Login",
-                true
-            );
-        } else {
-            updateUI(
-                "Bem-vindo!",
-                "Insira suas credenciais de acesso.",
-                "Acessar Plataforma",
-                "Novo por aqui?",
-                "Crie sua conta agora e comece a organizar sua empresa com inteligência.",
-                "Criar Conta Grátis",
-                false
-            );
-        }
+        const uiCfg = isSignup ? {
+            title: "Crie sua conta",
+            sub: "Preencha os dados abaixo para começar.",
+            btn: "Cadastrar Agora",
+            vTitle: "Já é de casa?",
+            vText: "Acesse sua conta para gerenciar seus resultados.",
+            vBtn: "Fazer Login"
+        } : {
+            title: "Bem-vindo!",
+            sub: "Insira suas credenciais de acesso.",
+            btn: "Acessar Plataforma",
+            vTitle: "Novo por aqui?",
+            vText: "Crie sua conta agora e organize sua empresa com inteligência.",
+            vBtn: "Criar Conta Grátis"
+        };
+
+        updateUI(uiCfg);
     };
 
-    function updateUI(fTitle, fSub, sBtn, vTitle, vText, swBtn, showNome) {
-        formTitle.textContent = fTitle;
-        formSubtitle.textContent = fSub;
-        submitBtn.innerHTML = `<span>${sBtn}</span>`;
-        visualTitle.textContent = vTitle;
-        visualText.textContent = vText;
-        switchBtn.textContent = swBtn;
+    function updateUI(cfg) {
+        el.formTitle.textContent = cfg.title;
+        el.formSubtitle.textContent = cfg.sub;
+        el.submitBtn.innerHTML = `<span>${cfg.btn}</span>`;
+        el.visualTitle.textContent = cfg.vTitle;
+        el.visualText.textContent = cfg.vText;
+        el.switchBtn.textContent = cfg.vBtn;
 
-        // Gerencia visibilidade do campo Nome e Link Esqueci Senha
-        groupNome.style.display = showNome ? "block" : "none";
-        linkForgot.style.visibility = showNome ? "hidden" : "visible"; // "arranca" no registro
-        inputNome.required = showNome;
+        el.groupNome.style.display = isSignup ? "block" : "none";
+        el.linkForgot.style.visibility = isSignup ? "hidden" : "visible";
+        el.inputNome.required = isSignup;
     }
 
-    /**
-     * Envio dos dados para o Spring Boot
-     */
-    authForm.addEventListener('submit', async (e) => {
+    // ==================== LÓGICA DE NEGÓCIO ====================
+
+    el.authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideFeedback();
 
-        const emailValue = inputEmail.value.trim().toLowerCase();
-        const senhaValue = inputSenha.value;
-        const nomeValue = inputNome.value.trim();
+        const config = getSafeConfig(); // Captura a config aqui dentro!
+        const email = el.inputEmail.value.trim().toLowerCase();
+        const senha = el.inputSenha.value;
+        const nome  = el.inputNome.value.trim();
 
-        if (!emailValue || !senhaValue || (isSignup && !nomeValue)) {
-            showFeedback("Por favor, preencha todos os campos obrigatórios.", "error");
-            return;
+        if (!email || !senha || (isSignup && !nome)) {
+            return showFeedback("Preencha todos os campos obrigatórios.", "error");
         }
 
         setLoading(true);
 
-        const url = isSignup ? '/api/v1/usuarios' : '/api/v1/auth/login';
-        const payload = { email: emailValue, senha: senhaValue };
-        if (isSignup) payload.nome = nomeValue;
+        const urlPath = isSignup ? '/api/v1/usuarios' : '/api/v1/auth/login';
 
         try {
-            const response = await fetch(url, {
+            // CORREÇÃO AQUI: Usando a URL da config de forma segura
+            const response = await fetch(`${config.API_BASE_URL}${urlPath}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(payload)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha, ...(isSignup && { nome }) })
             });
 
-            // CORREÇÃO DO LOG: Tenta extrair a mensagem do corpo antes de verificar response.ok
-            let data = {};
-            try {
-                data = await response.json();
-            } catch (pErr) { /* Resposta não é JSON */ }
+            const data = await response.json().catch(() => ({}));
 
-            if (response.ok) {
-                handleSuccess(data);
-            } else {
-                // Se o Java enviou EmailJaCadastradoException, pegamos a mensagem exata
-                // Prioriza 'mensagem' (seu DTO) depois 'message' (padrão Spring)
-                const errorMsg = data.mensagem || data.message || "Credenciais inválidas ou erro no servidor.";
-                throw new Error(errorMsg);
+            if (!response.ok) {
+                throw new Error(data.mensagem || data.message || 'Falha na autenticação');
             }
+
+            handleSuccess(data);
+
         } catch (err) {
-            console.error("Auth Error:", err);
             showFeedback(err.message, "error");
-        } finally {
             setLoading(false);
         }
     });
 
- function handleSuccess(data) {
-     if (isSignup) {
-         showFeedback("Conta criada com sucesso! Redirecionando...", "success");
-         setTimeout(() => window.toggleAuth(), 1500);
-     } else {
-         const token = data.accessToken || data.token;
+    function handleSuccess(data) {
+        const config = getSafeConfig();
 
-         if (token) {
-             localStorage.setItem('token', token);
+        if (isSignup) {
+            showFeedback("Conta criada! Redirecionando para login...", "success");
+            setTimeout(() => window.toggleAuth(), 1500);
+            return;
+        }
 
-             showFeedback("Acesso autorizado! Carregando...", "success");
+        const token = data.accessToken || data.token;
+        if (!token) {
+            showFeedback("Erro: Servidor não enviou o token.", "error");
+            setLoading(false);
+            return;
+        }
 
-             setTimeout(() => {
-                 window.location.href = '/empresa';
-             }, 800);
-         }
-     }
- }
+        // Grava o Token e Tenant via Core API
+        if (window.Taskflow) {
+            window.Taskflow.setToken(token);
+        }
+
+        showFeedback("Autenticado com sucesso!", "success");
+
+        setTimeout(() => {
+            const tenantId = window.Taskflow ? window.Taskflow.decodeTenantId(token) : null;
+
+            if (tenantId) {
+                // CORREÇÃO AQUI: Acesso seguro à rota
+                window.location.href = config.ROUTES.PLANOS;
+            } else {
+                window.location.href = '/empresa';
+            }
+        }, 1000);
+    }
+
+    // ==================== HELPERS ====================
 
     function setLoading(state) {
-        submitBtn.disabled = state;
-        submitBtn.innerHTML = state ? `Processando...` : `<span>${isSignup ? "Cadastrar Agora" : "Acessar Plataforma"}</span>`;
+        el.submitBtn.disabled = state;
+        el.submitBtn.innerHTML = state ?
+            '<i class="spinner"></i> Processando...' :
+            `<span>${isSignup ? "Cadastrar Agora" : "Acessar Plataforma"}</span>`;
     }
 
     function showFeedback(msg, type) {
-        feedback.textContent = msg;
-        feedback.className = `feedback-toast ${type === "error" ? "error-msg" : "success-msg"}`;
-        feedback.style.display = "block";
-
-        if (type === "error") {
-            container.classList.add('shake');
-            setTimeout(() => container.classList.remove('shake'), 400);
-        }
+        el.feedback.textContent = msg;
+        el.feedback.className = `feedback-toast ${type === "error" ? "error-msg" : "success-msg"}`;
+        el.feedback.style.display = "block";
     }
 
     function hideFeedback() {
-        feedback.style.display = "none";
+        el.feedback.style.display = "none";
     }
 });

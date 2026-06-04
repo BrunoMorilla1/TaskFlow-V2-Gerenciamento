@@ -49,4 +49,5 @@ public record LoginResposta(
     public boolean possuiAccessToken() {
         return accessToken != null && !accessToken.isBlank();
     }
+
 }

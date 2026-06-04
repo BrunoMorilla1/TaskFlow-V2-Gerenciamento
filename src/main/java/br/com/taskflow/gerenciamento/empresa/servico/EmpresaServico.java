@@ -126,8 +126,6 @@ public class EmpresaServico {
         empresaRepositorio.delete(empresa);
     }
 
-    // --- MÉTODOS PRIVADOS DE SUPORTE ---
-
     private Usuario buscarUsuarioOuFalhar(String email) {
         return usuarioRepositorio.findByEmail(email)
                 .orElseThrow(() -> {
@@ -178,9 +176,8 @@ public class EmpresaServico {
             return brasilApiClient.buscarCnpj(cnpj);
         } catch (feign.FeignException.NotFound e) {
             log.warn("Servico[Empresa] - CNPJ {} não encontrado na base da Receita.", cnpj);
-            return null; // Deixa o cadastro seguir com dados manuais
+            return null;
         } catch (Exception e) {
-            // PROTEÇÃO DE PRODUÇÃO: Se a API externa cair, o sistema não trava o cadastro
             log.error("Servico[Empresa] - Falha na integração com BrasilAPI para o CNPJ {}. Motivo: {}", cnpj, e.getMessage());
             return null;
         }

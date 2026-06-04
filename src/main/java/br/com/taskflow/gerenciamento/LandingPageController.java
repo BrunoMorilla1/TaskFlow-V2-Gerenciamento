@@ -10,7 +10,6 @@ public class LandingPageController {
     public String index() {
         return "landing";
     }
-
     @GetMapping("/login")
     public String login() {
         return "login";
@@ -29,5 +28,10 @@ public class LandingPageController {
     @GetMapping("/sucesso")
     public String sucesso() {
         return "sucesso";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard";
     }
 }

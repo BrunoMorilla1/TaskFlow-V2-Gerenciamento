@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class EmpresaMapper {
 
     public Empresa paraEntidade(EmpresaCriacaoRequisicao requisicao,
-                                BrasilApiCnpj dadosApi, // Novo parâmetro
+                                BrasilApiCnpj dadosApi,
                                 Usuario usuarioDono,
                                 String usuarioAuditoria) {
 
@@ -108,6 +108,7 @@ public class EmpresaMapper {
                 empresa.getMunicipio(),
                 empresa.getUf(),
                 empresa.getCep(),
+                empresa.getSegmentos(),
                 empresa.getInscricaoEstadual(),
                 empresa.getInscricaoMunicipal(),
                 empresa.getSite(),
@@ -127,6 +128,7 @@ public class EmpresaMapper {
                 empresa.getId(),
                 empresa.getNomeFantasia(),
                 empresa.getCnpj(),
+                empresa.getSegmentos(),
                 empresa.getStatus(),
                 empresa.isAtivo()
         );

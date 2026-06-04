@@ -1,122 +1,129 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento Confirmado | Taskflow</title>
+    <meta name="description" content="TaskFlow: Assinatura confirmada.">
+    <title>Assinatura Confirmada | TaskFlow</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/sucesso.css">
+
+    <link rel="stylesheet" href="/css/base.css">
 </head>
 <body>
 
-<div class="app">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div>
-            <div class="logo">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                    <rect width="32" height="32" rx="8" fill="white" opacity="0.2"/>
-                    <path d="M16 8L8 12V20L16 24L24 20V12L16 8Z" fill="white"/>
-                </svg>
-                <span>Taskflow</span>
-            </div>
-
-            <div class="steps">
-                <div class="step done" data-step="1">
-                    <div class="step-number">✓</div>
-                    <div class="step-text">Dados da Empresa</div>
-                </div>
-                <div class="step done" data-step="2">
-                    <div class="step-number">✓</div>
-                    <div class="step-text">Escolha do Plano</div>
-                </div>
-                <div class="step active" data-step="3">
-                    <div class="step-number">✓</div>
-                    <div class="step-text">Confirmação</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="sidebar-footer">
-            <p>Precisa de ajuda?</p>
-            <a href="mailto:suporte@taskflow.com.br">suporte@taskflow.com.br</a>
-        </div>
-    </aside>
-
-    <!-- CONTENT -->
-    <main class="content">
-        <div class="success-card" data-testid="success-card">
-
-            <!-- SUCCESS ICON -->
-            <div class="success-icon">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                    <circle cx="40" cy="40" r="40" fill="#10b981" opacity="0.1"/>
-                    <circle cx="40" cy="40" r="32" fill="#10b981" opacity="0.2"/>
-                    <path d="M25 40L35 50L55 30" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-
-            <h1>Pagamento Processado!</h1>
-            <p class="subtitle">Sua assinatura foi criada com sucesso</p>
-
-            <!-- STATUS INFO -->
-            <div id="statusInfo" class="status-info">
-                <div class="info-row">
-                    <span class="label">Status:</span>
-                    <span class="value" id="statusValue" data-testid="status-value">Aguardando pagamento</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Plano:</span>
-                    <span class="value">Empresarial - R$ 49,90/mês</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">ID da Assinatura:</span>
-                    <span class="value" id="assinaturaId" data-testid="assinatura-id">-</span>
-                </div>
-            </div>
-
-            <!-- PAYMENT LINK (IF AVAILABLE) -->
-            <div id="paymentLinkBox" class="payment-link-box hidden" data-testid="payment-link-box">
-                <p><strong>Complete seu pagamento:</strong></p>
-                <a
-                        id="paymentLink"
-                        href="#"
-                        target="_blank"
-                        class="btn-payment-link"
-                        data-testid="payment-link"
-                >
-                    Acessar Boleto/PIX
-                </a>
-            </div>
-
-            <!-- NEXT STEPS -->
-            <div class="next-steps">
-                <h3>Próximos Passos:</h3>
-                <ul>
-                    <li>✓ Complete o pagamento se ainda não o fez</li>
-                    <li>✓ Aguarde a confirmação (geralmente instantânea para PIX)</li>
-                    <li>✓ Acesse o sistema e comece a usar todas as funcionalidades</li>
-                </ul>
-            </div>
-
-            <!-- ACTIONS -->
-            <div class="actions">
-                <a href="/dashboard" class="btn-primary" data-testid="dashboard-btn">
-                    Ir para Dashboard
-                </a>
-                <a href="/" class="btn-secondary" data-testid="home-btn">
-                    Voltar ao Início
-                </a>
-            </div>
-
-        </div>
-    </main>
-
+<div id="loadingOverlay" class="loading-overlay" role="status">
+    <div class="spinner"></div>
+    <p>Verificando pagamento...</p>
 </div>
 
+<div class="page">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <a href="/" class="logo" aria-label="TaskFlow — Início">
+            <div class="logo-mark" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 6L6 11V21L16 26L26 21V11L16 6Z" fill="white"/>
+                </svg>
+            </div>
+            TaskFlow
+        </a>
+        <div class="user">
+            <a href="#" id="btnLogout" data-testid="logout-link">Sair</a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="container">
+
+        <div id="alertContainer" role="alert" aria-live="polite"></div>
+
+        <!-- HERO -->
+        <section class="card success-hero" data-testid="sucesso-hero">
+            <div class="icon-circle" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+
+            <h1>Assinatura contratada!</h1>
+
+            <p id="subHeadline">
+                Seu plano foi registrado. Conclua o pagamento abaixo para liberar todos os recursos.
+            </p>
+        </section>
+
+        <!-- DETALHES -->
+        <section class="card" data-testid="sucesso-detalhes">
+
+            <div class="card-header">
+                <div>
+                    <h2>Plano Empresarial</h2>
+                    <p class="muted">R$ 49,90/mês • cobrança recorrente</p>
+                </div>
+                <span id="statusBadge" class="status-badge status-PENDENTE"
+                      data-testid="status-badge" aria-live="polite">
+                    Aguardando pagamento
+                </span>
+            </div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="label">ID da assinatura</div>
+                    <div class="value" id="infoAssinaturaId" data-testid="info-assinatura-id">—</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Forma de pagamento</div>
+                    <div class="value" id="infoFormaPagamento">—</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Valor</div>
+                    <div class="value" id="infoValor">R$ 49,90</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Próximo passo</div>
+                    <div class="value" id="infoProximo">Efetue o pagamento</div>
+                </div>
+
+            </div>
+
+            <div id="paymentLinkBox" class="payment-link-box hidden" role="region"
+                 aria-label="Link de pagamento">
+                <div>
+                    <strong id="paymentLinkTitle">Link de pagamento</strong>
+                    <p class="muted" id="paymentLinkHint">Clique para abrir em uma nova aba.</p>
+                </div>
+                <a id="paymentLink" href="#" target="_blank" rel="noopener"
+                   data-testid="invoice-link">Pagar agora →</a>
+            </div>
+
+            <div class="actions">
+                <button class="btn-primary" id="btnAtualizar" type="button"
+                        data-testid="btn-atualizar-status">
+                    Verificar pagamento
+                </button>
+                <button class="btn-secondary" id="btnDashboard" type="button"
+                        data-testid="btn-ir-dashboard">
+                    Ir para o Dashboard
+                </button>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
 <script src="/js/sucesso.js"></script>
+
 </body>
 </html>

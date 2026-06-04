@@ -1,5 +1,7 @@
 package br.com.taskflow.gerenciamento.empresa.dto.requisicao;
 
+import br.com.taskflow.gerenciamento.empresa.enums.Segmentos;
+import br.com.taskflow.gerenciamento.empresa.util.CnpjValido;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -13,6 +15,7 @@ public record EmpresaCriacaoRequisicao(
         String nomeFantasia,
 
         @NotBlank(message = "O CNPJ é obrigatório.")
+        @CnpjValido(message = "O CNPJ informado é inválido.")
         String cnpj,
 
         @Email(message = "O email informado é inválido.")
@@ -29,7 +32,9 @@ public record EmpresaCriacaoRequisicao(
         String inscricaoMunicipal,
 
         @Size(max = 200, message = "O site deve ter no máximo 200 caracteres.")
-        String site
+        String site,
+
+        Segmentos segmentos
 
 ) {
 }

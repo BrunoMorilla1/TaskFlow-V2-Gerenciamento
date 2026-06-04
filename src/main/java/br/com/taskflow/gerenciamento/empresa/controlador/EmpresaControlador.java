@@ -6,7 +6,10 @@ import br.com.taskflow.gerenciamento.empresa.dto.requisicao.EmpresaAtualizacaoRe
 import br.com.taskflow.gerenciamento.empresa.dto.requisicao.EmpresaCriacaoRequisicao;
 import br.com.taskflow.gerenciamento.empresa.dto.resposta.EmpresaResponse;
 import br.com.taskflow.gerenciamento.empresa.dto.resposta.EmpresaResumoResponse;
+import br.com.taskflow.gerenciamento.empresa.dto.resposta.SegmentoResponse;
+import br.com.taskflow.gerenciamento.empresa.enums.Segmentos;
 import br.com.taskflow.gerenciamento.empresa.servico.EmpresaServico;
+import org.springframework.cache.annotation.Cacheable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -117,4 +121,21 @@ public class EmpresaControlador {
 
         return ResponseEntity.noContent().build();
     }
-}
+
+    @Cacheable(value = "Segmentos")
+    @GetMapping("/segmentos")
+    public ResponseEntity<List<SegmentoResponse>> listarSegmentos() {
+        return ResponseEntity.ok(
+                Arrays.stream(Segmentos.values())
+                        .map(seg -> new SegmentoResponse(
+                                seg.name(),
+                                formatar(seg.name())
+                        ))
+                        .toList()
+        );
+    }
+
+    private String formatar(String nome) {
+        return nome.charAt(0) + nome.substring(1).toLowerCase().replace("_", " ");
+    }
+    }

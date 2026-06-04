@@ -3,47 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Empresa | Taskflow</title>
+    <title>Cadastro de Empresa | TaskFlow</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/css/empresa.css">
 </head>
 <body>
 
-<!-- LOADING OVERLAY -->
-<div id="loadingOverlay" class="loading-overlay">
+<!-- LOADING -->
+<div id="loadingOverlay" class="loading-overlay" role="status" aria-label="Carregando">
     <div class="spinner"></div>
-    <p style="margin-top: 16px; font-weight: 500;">Processando...</p>
+    <p>Processando...</p>
 </div>
 
 <div class="app">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" aria-label="Etapas do cadastro">
         <div>
             <div class="logo">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
                     <rect width="32" height="32" rx="8" fill="white" opacity="0.2"/>
                     <path d="M16 8L8 12V20L16 24L24 20V12L16 8Z" fill="white"/>
                 </svg>
-                <span>Taskflow</span>
+                TaskFlow
             </div>
 
-            <div class="steps">
-                <div class="step active" data-step="1">
-                    <div class="step-number">1</div>
+            <nav class="steps" aria-label="Progresso do cadastro">
+                <div class="step active" data-step="1" aria-current="step">
+                    <div class="step-number" aria-hidden="true">1</div>
                     <div class="step-text">Dados da Empresa</div>
                 </div>
                 <div class="step" data-step="2">
-                    <div class="step-number">2</div>
+                    <div class="step-number" aria-hidden="true">2</div>
                     <div class="step-text">Escolha do Plano</div>
                 </div>
                 <div class="step" data-step="3">
-                    <div class="step-number">3</div>
+                    <div class="step-number" aria-hidden="true">3</div>
                     <div class="step-text">Confirmação</div>
                 </div>
-            </div>
+            </nav>
         </div>
 
         <div class="sidebar-footer">
@@ -56,13 +57,11 @@
     <main class="content">
         <div class="card">
 
-            <!-- ALERT CONTAINER -->
-            <div id="alertContainer"></div>
+            <div id="alertContainer" role="alert" aria-live="polite"></div>
 
-            <!-- HEADER -->
             <div class="card-header">
                 <h1>Cadastre sua Empresa</h1>
-                <p>Preencha os dados abaixo para começar a usar o Taskflow</p>
+                <p>Preencha os dados abaixo para começar a usar o TaskFlow.</p>
             </div>
 
             <!-- CNPJ SEARCH -->
@@ -76,112 +75,82 @@
                             placeholder="00.000.000/0000-00"
                             maxlength="18"
                             data-testid="cnpj-input"
+                            autocomplete="off"
+                            inputmode="numeric"
                             required
                     />
-                    <button
-                            type="button"
-                            id="btnConsultarCnpj"
-                            class="btn-primary"
-                            data-testid="consultar-cnpj-btn"
-                    >
+                    <button type="button" id="btnConsultarCnpj" class="btn-primary"
+                            data-testid="consultar-cnpj-btn">
                         Consultar
                     </button>
                 </div>
-                <small class="hint">Buscaremos os dados automaticamente via Receita Federal</small>
+                <small class="hint">Buscamos os dados automaticamente via Receita Federal.</small>
             </div>
 
-            <!-- FORM (HIDDEN INITIALLY) -->
-            <form id="formCadastroEmpresa" class="form hidden" data-testid="form-cadastro-empresa">
+            <!-- MAIN FORM -->
+            <form id="formCadastroEmpresa" class="form hidden" data-testid="form-cadastro-empresa"
+                  novalidate autocomplete="on">
 
                 <div class="form-section">
                     <h3>Dados Cadastrais</h3>
                     <div class="form-grid">
+
                         <div class="form-group">
-                            <label for="razaoSocial">Razão Social</label>
-                            <input
-                                    type="text"
-                                    id="razaoSocial"
-                                    name="razaoSocial"
-                                    placeholder="Empresa LTDA"
-                                    data-testid="razao-social-input"
-                                    required
-                            />
+                            <label for="razaoSocial">Razão Social <span aria-hidden="true" style="color:#dc2626">*</span></label>
+                            <input type="text" id="razaoSocial" name="razaoSocial"
+                                   placeholder="Empresa LTDA" data-testid="razao-social-input" required />
                         </div>
 
                         <div class="form-group">
                             <label for="nomeFantasia">Nome Fantasia</label>
-                            <input
-                                    type="text"
-                                    id="nomeFantasia"
-                                    name="nomeFantasia"
-                                    placeholder="Nome comercial"
-                                    data-testid="nome-fantasia-input"
-                            />
+                            <input type="text" id="nomeFantasia" name="nomeFantasia"
+                                   placeholder="Nome comercial" data-testid="nome-fantasia-input" />
                         </div>
 
                         <div class="form-group">
                             <label for="email">E-mail</label>
-                            <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    placeholder="contato@empresa.com.br"
-                                    data-testid="email-input"
-                            />
+                            <input type="email" id="email" name="email"
+                                   placeholder="contato@empresa.com.br" data-testid="email-input"
+                                   autocomplete="email" />
                         </div>
 
                         <div class="form-group">
                             <label for="telefone">Telefone</label>
-                            <input
-                                    type="text"
-                                    id="telefone"
-                                    name="telefone"
-                                    placeholder="(00) 00000-0000"
-                                    data-testid="telefone-input"
-                            />
+                            <input type="text" id="telefone" name="telefone"
+                                   placeholder="(00) 00000-0000" data-testid="telefone-input"
+                                   inputmode="numeric" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="segmentos">Segmento</label>
+                            <select id="segmentos" name="segmentos">
+                                <option value="" disabled selected>Selecione um segmento</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label for="inscricaoEstadual">Inscrição Estadual</label>
-                            <input
-                                    type="text"
-                                    id="inscricaoEstadual"
-                                    name="inscricaoEstadual"
-                                    placeholder="000.000.000.000"
-                                    data-testid="inscricao-estadual-input"
-                            />
+                            <input type="text" id="inscricaoEstadual" name="inscricaoEstadual"
+                                   placeholder="000.000.000.000" data-testid="inscricao-estadual-input" />
                         </div>
 
                         <div class="form-group">
                             <label for="inscricaoMunicipal">Inscrição Municipal</label>
-                            <input
-                                    type="text"
-                                    id="inscricaoMunicipal"
-                                    name="inscricaoMunicipal"
-                                    placeholder="000000"
-                                    data-testid="inscricao-municipal-input"
-                            />
+                            <input type="text" id="inscricaoMunicipal" name="inscricaoMunicipal"
+                                   placeholder="000000" data-testid="inscricao-municipal-input" />
                         </div>
 
                         <div class="form-group full-width">
-                            <label for="site">Site (opcional)</label>
-                            <input
-                                    type="url"
-                                    id="site"
-                                    name="site"
-                                    placeholder="https://www.empresa.com.br"
-                                    data-testid="site-input"
-                            />
+                            <label for="site">Site <span style="color:var(--n400);font-weight:500;">(opcional)</span></label>
+                            <input type="url" id="site" name="site"
+                                   placeholder="https://www.empresa.com.br" data-testid="site-input" />
                         </div>
+
                     </div>
                 </div>
 
                 <div class="form-actions">
-                    <button
-                            type="submit"
-                            class="btn-primary btn-large"
-                            data-testid="submit-empresa-btn"
-                    >
+                    <button type="submit" class="btn-primary btn-large" data-testid="submit-empresa-btn">
                         Continuar para Planos →
                     </button>
                 </div>
@@ -192,6 +161,8 @@
 
 </div>
 
-<script src="/js/empresa2.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/empresa.js"></script>
 </body>
 </html>

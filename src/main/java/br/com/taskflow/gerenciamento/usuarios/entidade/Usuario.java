@@ -229,18 +229,21 @@ public class Usuario implements UserDetails {
     }
 
     public boolean possuiAcessoAtivo() {
-        if (this.role == RoleUsuario.ADMIN) return true;
-        return this.ativo && !this.deletado && (dataExpiracaoAcesso == null || dataExpiracaoAcesso.isAfter(LocalDateTime.now()));
+        if (this.role == RoleUsuario.ADMIN) {
+            return true;
+        }
+
+        return this.ativo
+                && !this.deletado
+                && (dataExpiracaoAcesso == null
+                || dataExpiracaoAcesso.isAfter(LocalDateTime.now()));
     }
 
     public boolean estaAtivoParaLogin() {
-        return this.habilitado
-                && this.ativo
-                && !this.deletado
-                && this.contaNaoBloqueada
-                && this.contaNaoExpirada
-                && this.credencialNaoExpirada
-                && possuiAcessoAtivo();
+        return isEnabled()
+                && contaNaoBloqueada
+                && contaNaoExpirada
+                && credencialNaoExpirada;
     }
 
     @Override
@@ -276,7 +279,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return habilitado && ativo && !deletado && possuiAcessoAtivo();
+        return habilitado && ativo && !deletado;
     }
 
     @Override

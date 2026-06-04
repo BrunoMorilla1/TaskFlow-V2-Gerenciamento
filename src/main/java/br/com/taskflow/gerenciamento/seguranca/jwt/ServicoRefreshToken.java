@@ -18,7 +18,7 @@ public class ServicoRefreshToken {
 
     private final RepositorioRefreshToken repositorioRefreshToken;
     private final JwtValidadorToken jwtValidadorToken;
-    private final JwtGeradorToken jwtGeradorToken;
+    private final JwtServico jwtGeradorToken;
 
     @Transactional
     public void salvarRefreshToken(String token) {

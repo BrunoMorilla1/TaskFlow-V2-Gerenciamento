@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TaskFlow</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="/css/base.css">
+</head>
+<body>
+
+<div id="loadingOverlay" class="loading-overlay" role="status" aria-label="Carregando">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+</div>
+
+<div class="page" data-testid="dashboard-page">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <a href="/" class="logo" aria-label="TaskFlow — Início">
+            <div class="logo-mark" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 6L6 11V21L16 26L26 21V11L16 6Z" fill="white"/>
+                </svg>
+            </div>
+            TaskFlow
+        </a>
+
+        <div class="user">
+            <span id="userEmail" data-testid="user-email" aria-live="polite"></span>
+            <a href="#" id="btnLogout" data-testid="logout-link">Sair</a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="container">
+
+        <div id="alertContainer" role="alert" aria-live="polite"></div>
+
+        <!-- ASSINATURA ATIVA -->
+        <section class="card" data-testid="card-assinatura" id="cardAssinatura">
+
+            <div class="card-header">
+                <div>
+                    <h2>Minha Assinatura</h2>
+                    <p class="muted">Plano Empresarial — R$ 49,90/mês</p>
+                </div>
+                <span id="statusBadge" class="status-badge status-INDEFINIDO"
+                      data-testid="status-badge" aria-live="polite">—</span>
+            </div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="label">ID da cobrança</div>
+                    <div class="value" id="infoAsaasId">—</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Valor</div>
+                    <div class="value" id="infoValor">—</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Último pagamento</div>
+                    <div class="value" id="infoDataPagamento">—</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Próximo vencimento</div>
+                    <div class="value" id="infoDataVencimento">—</div>
+                </div>
+
+            </div>
+
+            <p class="muted" id="statusMessage" aria-live="polite" style="margin-top:12px;"></p>
+
+            <div id="paymentLinkBox" class="payment-link-box hidden" role="region"
+                 aria-label="Link de pagamento">
+                <div>
+                    <strong>Link de pagamento</strong>
+                    <p class="muted">Conclua o pagamento para liberar o acesso.</p>
+                </div>
+                <a id="paymentLink" href="#" target="_blank" rel="noopener noreferrer"
+                   data-testid="payment-link">Pagar agora →</a>
+            </div>
+
+            <div class="actions">
+                <button class="btn-primary" id="btnAtualizar" type="button">
+                    Atualizar status
+                </button>
+                <button class="btn-danger" id="btnCancelar" type="button">
+                    Cancelar assinatura
+                </button>
+            </div>
+
+        </section>
+
+        <!-- SEM ASSINATURA -->
+        <section class="card hidden" id="semAssinaturaCard" data-testid="sem-assinatura">
+            <div class="empty">
+                <h2>Sem assinatura ativa</h2>
+                <p>Contrate o Plano Empresarial e libere todas as funcionalidades.</p>
+                <div class="actions" style="justify-content:center; margin-top:0;">
+                    <a class="btn-primary" href="/planos" data-testid="btn-contratar">
+                        Contratar agora
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/dashboard.js"></script>
+
+</body>
+</html>

@@ -3,77 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskFlow | Gestão Inteligente</title>
+    <title>TaskFlow — Entrar</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" th:href="@{/css/login.css}">
-
-    <script th:src="@{/js/login.js}" defer></script>
+    <link rel="stylesheet" th:href="@{/css/login.css}" href="/css/login.css">
+    <script th:src="@{/js/config.js}" src="/js/config.js"></script>
+    <script th:src="@{/js/api.js}" src="/js/api.js" defer></script>
+    <script th:src="@{/js/login.js}" src="/js/login.js" defer></script>
 </head>
 <body>
 
-<div class="bg-blur">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-</div>
+<div class="bg-mesh" aria-hidden="true"></div>
 
 <div class="auth-wrapper">
     <div class="auth-container" id="authContainer">
 
-        <main class="side form-side">
-            <div class="form-content">
-                <div class="logo-area">
-                    <span class="logo-dot"></span>
-                    <span class="logo-text">TaskFlow</span>
+        <!-- FORM SIDE -->
+        <main class="form-side">
+
+            <div class="logo-area">
+                <div class="logo-mark" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 6L6 11V21L16 26L26 21V11L16 6Z" fill="white"/>
+                    </svg>
+                </div>
+                <span class="logo-text">TaskFlow</span>
+            </div>
+
+            <div id="authFeedback" class="feedback-toast" role="alert" aria-live="polite"></div>
+
+            <header class="form-header">
+                <h2 id="formTitle">Bem-vindo de volta!</h2>
+                <p id="formSubtitle">Insira suas credenciais para continuar.</p>
+            </header>
+
+            <form id="authForm" class="modern-form" novalidate autocomplete="on">
+
+                <div class="input-group" id="groupNome" style="display:none;">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="name" placeholder="Seu nome" autocomplete="name">
                 </div>
 
-                <div id="authFeedback" class="feedback-toast"></div>
+                <div class="input-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="nome@empresa.com"
+                           autocomplete="email" required>
+                </div>
 
-                <header class="form-header">
-                    <h2 id="formTitle">Bem-vindo!</h2>
-                    <p id="formSubtitle">Insira suas credenciais de acesso.</p>
-                </header>
-
-                <form id="authForm" class="modern-form" novalidate>
-                    <div class="input-group" id="groupNome" style="display: none;">
-                        <label for="nome">Nome Completo</label>
-                        <input type="text" id="nome" placeholder="Seu nome ou empresa">
+                <div class="input-group">
+                    <div class="label-wrapper">
+                        <label for="senha">Senha</label>
+                        <a href="#" class="link-forgot" id="forgotPass" tabindex="-1">Esqueceu a senha?</a>
                     </div>
+                    <input type="password" id="senha" name="password" placeholder="••••••••"
+                           autocomplete="current-password" required>
+                </div>
 
-                    <div class="input-group">
-                        <label for="email">E-mail Corporativo</label>
-                        <input type="email" id="email" placeholder="nome@empresa.com" required>
-                    </div>
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span>Acessar Plataforma</span>
+                </button>
 
-                    <div class="input-group">
-                        <div class="label-wrapper">
-                            <label for="senha">Senha</label>
-                            <a href="#" class="link-forgot" id="forgotPass">Esqueceu a senha?</a>
-                        </div>
-                        <input type="password" id="senha" placeholder="••••••••" required>
-                    </div>
-
-                    <button type="submit" class="btn-primary" id="submitBtn">
-                        <span>Acessar Plataforma</span>
-                    </button>
-                </form>
-            </div>
+            </form>
         </main>
 
-        <aside class="side visual-side">
+        <!-- VISUAL SIDE -->
+        <aside class="visual-side" aria-hidden="true">
             <div class="visual-overlay"></div>
             <div class="visual-content">
-                <div class="badge">Acelera v2.0</div>
+                <span class="v-badge">TaskFlow v2.0</span>
                 <h2 id="visualTitle">Novo por aqui?</h2>
                 <p id="visualText">
-                    Crie sua conta agora e comece a organizar sua empresa com inteligência.
+                    Crie sua conta e comece a organizar sua empresa com inteligência. 7 dias grátis, sem cartão.
                 </p>
-
-                <button class="btn-outline-white" id="switchBtn" onclick="toggleAuth()">
-                    Criar Conta Grátis
+                <button class="btn-outline-white" id="switchBtn" type="button" onclick="toggleAuth()">
+                    Criar conta grátis
                 </button>
             </div>
         </aside>

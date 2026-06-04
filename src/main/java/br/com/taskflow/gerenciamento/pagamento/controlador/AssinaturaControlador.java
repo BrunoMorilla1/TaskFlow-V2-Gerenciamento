@@ -45,12 +45,20 @@ public class AssinaturaControlador {
         log.info("Controlador[Assinatura] - Requisicao para buscar status do plano. usuario={}, ip={}",
                 principal.getUsername(), ip);
 
-        var response = assinaturaServico.buscarStatusPorUsuario(principal.getUsername(), ip);
+        try {
+            var response = assinaturaServico.buscarStatusPorUsuario(principal.getUsername(), ip);
 
-        log.info("Controlador[Assinatura] - Status do plano recuperado. status={}, usuario={}, ip={}",
-                response.status(), principal.getUsername(), ip);
+            log.info("Controlador[Assinatura] - Status do plano recuperado. status={}, usuario={}, ip={}",
+                    response.status(), principal.getUsername(), ip);
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Nenhuma transação encontrada")) {
+                log.info("Controlador[Assinatura] - Usuário novo sem assinaturas: {}", principal.getUsername());
+                return ResponseEntity.noContent().build();
+            }
+            throw e;
+        }
     }
 
     @DeleteMapping("/cancelar")

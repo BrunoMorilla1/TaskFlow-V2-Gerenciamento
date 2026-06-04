@@ -1,8 +1,10 @@
 package br.com.taskflow.gerenciamento.empresa.util;
 
+@Deprecated
 public class EmpresaUtil {
+
+    @Deprecated
     public static String limparCnpj(String cnpj) {
-        return cnpj == null ? null : cnpj.replaceAll("\\D", "").trim();
+        return ValidadorCnpj.limparCnpj(cnpj);
     }
 }
-

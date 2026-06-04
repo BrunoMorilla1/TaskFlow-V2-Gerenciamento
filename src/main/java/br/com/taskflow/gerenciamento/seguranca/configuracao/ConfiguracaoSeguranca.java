@@ -41,10 +41,8 @@ public class ConfiguracaoSeguranca {
 
     @Bean
     public PasswordEncoder codificadorSenha() {
-        // Força bruta 12 é excelente para produção
         return new BCryptPasswordEncoder(12);
     }
-
     @Bean
     public AuthenticationManager gerenciadorAutenticacao(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -74,7 +72,6 @@ public class ConfiguracaoSeguranca {
                                         "img-src 'self' data: blob: https://bs-uploads.toptal.io https://cdn.sanity.io https://mir-s3-cdn-cf.behance.net https://www.inetsoft.com; " +
                                         "font-src 'self' data: https://fonts.gstatic.com; " +
                                         "connect-src 'self' http://localhost:8080; " +
-                                        "connect-src 'self'; " +
                                         "frame-ancestors 'none';"
                         ))
                 )
@@ -82,23 +79,23 @@ public class ConfiguracaoSeguranca {
                         .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/empresas/consultar-cnpj/**").permitAll()
-                        .requestMatchers("/", "/empresa", "/login", "/cadastro", "/landing.html", "/favicon.ico", "/site.webmanifest").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/empresas/segmentos").permitAll()
+                        .requestMatchers("/","/api/v1/segmentos", "/empresa", "/login", "/cadastro", "/landing.html", "planos", "/favicon.ico", "/site.webmanifest").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/assets/**", "/images/**").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-
                         .anyRequest().authenticated()
                 );
 
         http.addFilterBefore(filtroHeadersSeguranca, UsernamePasswordAuthenticationFilter.class);
+
         http.addFilterAfter(filtroRateLimit, FiltroHeadersSeguranca.class);
 
-        http.addFilterBefore(jwtFiltroAutenticacao, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtFiltroAutenticacao, FiltroRateLimit.class);
 
         http.addFilterAfter(tenantFiltro, JwtFiltroAutenticacao.class);
 
         return http.build();
     }
-
     @Bean
     public CorsConfigurationSource fonteConfiguracaoCors() {
         CorsConfiguration config = new CorsConfiguration();

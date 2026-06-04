@@ -1,5 +1,6 @@
 package br.com.taskflow.gerenciamento.empresa.dto.resposta;
 
+import br.com.taskflow.gerenciamento.empresa.enums.Segmentos;
 import br.com.taskflow.gerenciamento.empresa.enums.StatusEmpresa;
 
 public record EmpresaResumoResponse(
@@ -9,6 +10,8 @@ public record EmpresaResumoResponse(
         String nomeFantasia,
 
         String cnpj,
+
+        Segmentos segmentos,
 
         StatusEmpresa status,
 

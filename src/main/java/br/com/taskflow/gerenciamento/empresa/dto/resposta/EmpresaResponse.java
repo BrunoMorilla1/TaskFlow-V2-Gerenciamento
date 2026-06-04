@@ -1,5 +1,6 @@
 package br.com.taskflow.gerenciamento.empresa.dto.resposta;
 
+import br.com.taskflow.gerenciamento.empresa.enums.Segmentos;
 import br.com.taskflow.gerenciamento.empresa.enums.StatusEmpresa;
 import java.time.LocalDateTime;
 
@@ -16,6 +17,7 @@ public record EmpresaResponse(
         String municipio,
         String uf,
         String cep,
+        Segmentos segmentos,
         String inscricaoEstadual,
         String inscricaoMunicipal,
         String site,

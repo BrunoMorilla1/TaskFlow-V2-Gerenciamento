@@ -3,77 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escolha seu Plano | Taskflow</title>
+    <title>Escolha seu Plano | TaskFlow</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/css/planos.css">
 </head>
 <body>
 
-<!-- LOADING OVERLAY -->
-<div id="loadingOverlay" class="loading-overlay">
+<!-- LOADING -->
+<div id="loadingOverlay" class="loading-overlay" role="status" aria-label="Carregando">
     <div class="spinner"></div>
-    <p style="margin-top: 16px; font-weight: 500;">Processando pagamento...</p>
+    <p>Verificando sua conta...</p>
 </div>
 
 <div class="app">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" aria-label="Etapas do cadastro">
         <div>
             <div class="logo">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <svg width="34" height="34" viewBox="0 0 32 32" fill="none" aria-hidden="true">
                     <rect width="32" height="32" rx="8" fill="white" opacity="0.2"/>
                     <path d="M16 8L8 12V20L16 24L24 20V12L16 8Z" fill="white"/>
                 </svg>
-                <span>Taskflow</span>
+                TaskFlow
             </div>
 
-            <div class="steps">
-                <div class="step done" data-step="1">
-                    <div class="step-number">✓</div>
+            <nav class="steps" aria-label="Progresso do cadastro">
+                <div class="step done" aria-label="Concluído">
+                    <div class="step-number" aria-hidden="true">✓</div>
                     <div class="step-text">Dados da Empresa</div>
                 </div>
-                <div class="step active" data-step="2">
-                    <div class="step-number">2</div>
+                <div class="step active" aria-current="step">
+                    <div class="step-number" aria-hidden="true">2</div>
                     <div class="step-text">Escolha do Plano</div>
                 </div>
-                <div class="step" data-step="3">
-                    <div class="step-number">3</div>
+                <div class="step">
+                    <div class="step-number" aria-hidden="true">3</div>
                     <div class="step-text">Confirmação</div>
                 </div>
-            </div>
+            </nav>
         </div>
 
         <div class="sidebar-footer">
-            <p>Precisa de ajuda?</p>
-            <a href="mailto:suporte@taskflow.com.br">suporte@taskflow.com.br</a>
+            <p>🔒 Checkout seguro</p>
+            <a href="mailto:suporte@taskflow.com.br">Suporte Prioritário</a>
         </div>
     </aside>
 
     <!-- CONTENT -->
     <main class="content">
 
-        <!-- ALERT CONTAINER -->
-        <div id="alertContainer"></div>
+        <div id="alertContainer" role="alert" aria-live="polite"></div>
 
-        <!-- HEADER -->
         <div class="header">
-            <h1>Escolha seu Plano</h1>
-            <p>Selecione o plano ideal para sua empresa e comece agora</p>
+            <h1>Libere todo o potencial</h1>
+            <p>Escolha seu plano e junte-se a centenas de empresas que crescem com o TaskFlow.</p>
         </div>
 
-        <!-- PRICING CARDS -->
         <div class="pricing-container">
 
-            <!-- PLANO ÚNICO -->
-            <div class="pricing-card featured" data-testid="plano-card">
-                <div class="badge">Mais Popular</div>
+            <div class="pricing-card featured">
+                <div class="badge">A escolha das empresas</div>
 
                 <div class="plan-header">
                     <h2>Plano Empresarial</h2>
-                    <p class="plan-description">Acesso completo a todas as funcionalidades</p>
+                    <p class="plan-description">Todas as ferramentas em um só lugar.</p>
                 </div>
 
                 <div class="price-box">
@@ -82,68 +79,52 @@
                         <span class="amount">49</span>
                         <span class="decimals">,90</span>
                     </div>
-                    <div class="period">/mês</div>
+                    <div class="period">por mês • cobrança recorrente</div>
                 </div>
 
                 <ul class="features-list">
                     <li>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                         </svg>
-                        <span>Gestão completa de clientes</span>
+                        <span>Clientes ilimitados</span>
                     </li>
                     <li>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                         </svg>
-                        <span>Controle de estoque e produtos</span>
+                        <span>Estoque e Produtos Inteligentes</span>
                     </li>
                     <li>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                         </svg>
-                        <span>Ordens de serviço ilimitadas</span>
+                        <span>Ordens de Serviço Automáticas</span>
                     </li>
                     <li>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                         </svg>
-                        <span>Relatórios financeiros avançados</span>
-                    </li>
-                    <li>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                        <span>Suporte prioritário</span>
-                    </li>
-                    <li>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                        <span>Atualizações gratuitas</span>
+                        <span>Painel Financeiro em Tempo Real</span>
                     </li>
                 </ul>
 
-                <button
-                        class="btn-select"
-                        onclick="showCheckoutModal()"
-                        data-testid="selecionar-plano-btn"
-                >
-                    Selecionar Plano
+                <button id="btnSelecionarPlano" class="btn-select" type="button">
+                    Assinar Agora
                 </button>
             </div>
 
         </div>
 
-        <!-- GARANTIA -->
-        <div class="guarantee-box">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="guarantee-box" role="note">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5" aria-hidden="true">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <path d="M9 12l2 2 4-4"/>
+                <path d="M9 12l2 2 4-4" stroke-linecap="round"/>
             </svg>
             <div>
                 <h3>Garantia de 7 dias</h3>
-                <p>Se não ficar satisfeito, devolvemos seu dinheiro sem perguntas</p>
+                <p>Satisfação garantida ou seu dinheiro de volta. Sem burocracia.</p>
             </div>
         </div>
 
@@ -152,149 +133,98 @@
 </div>
 
 <!-- CHECKOUT MODAL -->
-<div id="checkoutModal" class="modal" data-testid="checkout-modal">
+<div id="checkoutModal" class="modal" hidden role="dialog" aria-modal="true"
+     aria-labelledby="modalTitle">
     <div class="modal-content">
+
         <div class="modal-header">
-            <h2>Finalizar Assinatura</h2>
-            <button class="btn-close" onclick="closeCheckoutModal()" data-testid="close-modal-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <h2 id="modalTitle">Finalizar assinatura</h2>
+            <button id="btnCloseModal" class="btn-close" type="button" aria-label="Fechar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
             </button>
         </div>
 
         <div class="modal-body">
+            <form id="checkoutForm" novalidate>
 
-            <!-- PAYMENT METHOD SELECTOR -->
-            <div class="payment-methods">
-                <h3>Escolha a forma de pagamento</h3>
-                <div class="payment-options">
-                    <label class="payment-option" data-testid="payment-pix">
+                <div class="payment-methods" role="radiogroup" aria-label="Forma de pagamento">
+                    <label class="payment-option">
                         <input type="radio" name="paymentMethod" value="PIX" checked />
                         <div class="option-content">
-                            <div class="option-icon">💳</div>
+                            <span class="option-icon" aria-hidden="true">⚡</span>
                             <div>
                                 <div class="option-title">PIX</div>
-                                <div class="option-subtitle">Aprovação instantânea</div>
+                                <div class="option-subtitle">Ativação imediata</div>
                             </div>
                         </div>
                     </label>
 
-                    <label class="payment-option" data-testid="payment-boleto">
-                        <input type="radio" name="paymentMethod" value="BOLETO" />
+                    <label class="payment-option">
+                        <input type="radio" name="paymentMethod" value="CREDITO" />
                         <div class="option-content">
-                            <div class="option-icon">📄</div>
-                            <div>
-                                <div class="option-title">Boleto</div>
-                                <div class="option-subtitle">Vencimento em 3 dias</div>
-                            </div>
-                        </div>
-                    </label>
-
-                    <label class="payment-option" data-testid="payment-credit-card">
-                        <input type="radio" name="paymentMethod" value="CREDIT_CARD" />
-                        <div class="option-content">
-                            <div class="option-icon">💰</div>
+                            <span class="option-icon" aria-hidden="true">💳</span>
                             <div>
                                 <div class="option-title">Cartão de Crédito</div>
-                                <div class="option-subtitle">Parcele em até 12x</div>
+                                <div class="option-subtitle">Em até 12x</div>
                             </div>
                         </div>
                     </label>
                 </div>
-            </div>
-
-            <!-- CHECKOUT FORM -->
-            <form id="checkoutForm" class="checkout-form" data-testid="checkout-form">
 
                 <div class="form-group">
-                    <label for="documentoCliente">CPF ou CNPJ do Responsável</label>
-                    <input
-                            type="text"
-                            id="documentoCliente"
-                            name="documentoCliente"
-                            placeholder="000.000.000-00"
-                            data-testid="documento-input"
-                            required
-                    />
+                    <label for="documentoCliente">CPF ou CNPJ</label>
+                    <input type="text" id="documentoCliente" name="documentoCliente"
+                           placeholder="Somente números" required inputmode="numeric" />
                 </div>
 
-                <!-- CREDIT CARD FIELDS (CONDITIONAL) -->
                 <div id="creditCardFields" class="hidden">
                     <div class="form-group">
                         <label for="nomeNoCartao">Nome no Cartão</label>
-                        <input
-                                type="text"
-                                id="nomeNoCartao"
-                                name="nomeNoCartao"
-                                placeholder="Como está impresso no cartão"
-                                data-testid="nome-cartao-input"
-                        />
+                        <input type="text" id="nomeNoCartao" name="nomeNoCartao"
+                               placeholder="Como aparece no cartão" autocomplete="cc-name" />
                     </div>
-
                     <div class="form-group">
                         <label for="numeroCartao">Número do Cartão</label>
-                        <input
-                                type="text"
-                                id="numeroCartao"
-                                name="numeroCartao"
-                                placeholder="0000 0000 0000 0000"
-                                data-testid="numero-cartao-input"
-                                maxlength="19"
-                        />
+                        <input type="text" id="numeroCartao" name="numeroCartao"
+                               placeholder="0000 0000 0000 0000" inputmode="numeric"
+                               autocomplete="cc-number" maxlength="19" />
                     </div>
-
                     <div class="form-row">
                         <div class="form-group">
                             <label for="validadeCartao">Validade</label>
-                            <input
-                                    type="text"
-                                    id="validadeCartao"
-                                    name="validadeCartao"
-                                    placeholder="MM/AA"
-                                    data-testid="validade-cartao-input"
-                                    maxlength="5"
-                            />
+                            <input type="text" id="validadeCartao" name="validadeCartao"
+                                   placeholder="MM/AA" maxlength="5" autocomplete="cc-exp" />
                         </div>
                         <div class="form-group">
                             <label for="cvv">CVV</label>
-                            <input
-                                    type="text"
-                                    id="cvv"
-                                    name="cvv"
-                                    placeholder="000"
-                                    data-testid="cvv-input"
-                                    maxlength="4"
-                            />
+                            <input type="text" id="cvv" name="cvv" placeholder="123"
+                                   maxlength="4" inputmode="numeric" autocomplete="cc-csc" />
                         </div>
                     </div>
                 </div>
 
-                <!-- SUMMARY -->
                 <div class="order-summary">
-                    <div class="summary-row">
-                        <span>Plano Empresarial</span>
-                        <span>R$ 49,90/mês</span>
-                    </div>
                     <div class="summary-row total">
-                        <span>Total</span>
+                        <span>Total mensal</span>
                         <span>R$ 49,90</span>
                     </div>
                 </div>
 
-                <button
-                        type="submit"
-                        class="btn-primary btn-large"
-                        data-testid="confirmar-pagamento-btn"
-                >
-                    Confirmar Pagamento
+                <button type="submit" id="btnConfirmar" class="btn-select">
+                    Confirmar e Ativar Plano
                 </button>
-            </form>
 
+            </form>
         </div>
+
     </div>
 </div>
 
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
 <script src="/js/planos.js"></script>
 </body>
 </html>
