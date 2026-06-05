@@ -3,247 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TaskFlow: Gestão completa para micro e pequenas empresas. Controle financeiro, orçamentos e muito mais.">
+    <meta name="description" content="TaskFlow: Gestão simplificada para empresas e micro negócios acelerarem seus resultados.">
+    <meta name="author" content="TaskFlow Team">
     <meta name="theme-color" content="#ffffff">
-    <title>TaskFlow — Gestão Profissional</title>
 
-    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}" href="/favicon.ico">
-    <link rel="manifest" th:href="@{/site.webmanifest}" href="/site.webmanifest">
+    <title>TaskFlow - Gestão Profissional</title>
+
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/favicon-16x16.png}">
+    <link rel="manifest" th:href="@{/site.webmanifest}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" th:href="@{/css/landing.css}" href="/css/landing.css">
+    <link rel="stylesheet" th:href="@{/css/landing.css}">
 </head>
 <body>
 
-<div class="bg-noise" aria-hidden="true"></div>
+<div class="bg-glow-center"></div>
 
-<!-- HEADER -->
 <header id="header">
-    <a th:href="@{/}" href="/" class="logo">
-        <div class="logo-icon" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
-                <path d="M16 6L6 11V21L16 26L26 21V11L16 6Z" fill="white"/>
-            </svg>
-        </div>
-        TaskFlow
-    </a>
+    <a th:href="@{/}" class="logo">Task<span>Flow</span></a>
 
-    <nav class="header-right" aria-label="Navegação principal">
-        <a href="#features" class="btn btn-nav">Recursos</a>
-        <a href="#pricing" class="btn btn-nav">Planos</a>
-        <a href="https://wa.me/5511999999999" target="_blank" rel="noopener" class="btn btn-nav">Suporte</a>
-        <a th:href="@{/login}" href="/login" class="btn btn-outline">Entrar</a>
-        <a th:href="@{/login(mode='signup')}" href="/login?mode=signup" class="btn btn-primary">Criar conta grátis</a>
+    <nav class="header-right">
+        <a href="#features" class="btn btn-nav">Detalhes</a>
+        <a href="#pricing-section" class="btn btn-nav">Preço</a>
+        <a href="https://wa.me/5511999999999" target="_blank" class="btn btn-nav">Suporte</a>
+
+        <a th:href="@{/login}" class="btn btn-outline">Login</a>
+        <a th:href="@{/login(mode='signup')}" class="btn btn-primary">Criar Conta</a>
     </nav>
 </header>
 
 <main>
-
-    <!-- HERO -->
-    <section class="hero" aria-label="Apresentação">
-        <div class="hero-inner">
-
+    <section class="hero">
+        <div class="hero-content-wrapper animate-fade">
             <div class="hero-text">
-                <div class="hero-label anim">
-                    <span class="hero-label-dot" aria-hidden="true">
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                            <path d="M5 1L9 3V7L5 9L1 7V3L5 1Z" fill="white"/>
-                        </svg>
-                    </span>
-                    Plataforma de Gestão
-                </div>
-
-                <h1 class="anim">
-                    Gestão que <span class="grad">acelera</span><br>
-                    sua empresa
-                </h1>
-
-                <p class="anim">
-                    Controle financeiro, orçamentos profissionais e gestão inteligente — tudo em uma única plataforma feita para quem empreende.
+                <h1>Gestão que <span>acelera</span> sua empresa</h1>
+                <p>
+                    A solução completa para micro negócios: controle financeiro, orçamentos profissionais e gestão inteligente em uma única plataforma.
                 </p>
 
-                <div class="hero-btns anim">
-                    <a th:href="@{/login(mode='signup')}" href="/login?mode=signup" class="btn btn-dark">
-                        Testar 7 dias grátis
-                    </a>
-                    <a href="#features" class="btn btn-ghost">
-                        Ver recursos →
-                    </a>
+                <div class="hero-btns">
+                    <a th:href="@{/login(mode='signup')}" class="btn btn-dark">Testar 7 dias grátis</a>
+                    <a href="#features" class="btn btn-outline">Conhecer recursos</a>
                 </div>
 
-                <div class="hero-trust anim">
-                    <div class="trust-item">
-                        <span class="trust-icon" aria-hidden="true">✓</span>
-                        Sem fidelidade
-                    </div>
-                    <div class="trust-item">
-                        <span class="trust-icon" aria-hidden="true">✓</span>
-                        Cancele quando quiser
-                    </div>
-                    <div class="trust-item">
-                        <span class="trust-icon" aria-hidden="true">✓</span>
-                        Suporte incluso
-                    </div>
+                <div class="hero-benefits-glass">
+                    <div class="benefit-item"><i>✓</i> Pagamento facilitado</div>
+                    <div class="benefit-item"><i>✓</i> Sem fidelidade</div>
+                    <div class="benefit-item"><i>✓</i> Suporte especializado</div>
                 </div>
             </div>
 
-            <div class="hero-visual anim">
-                <div class="hero-mockup">
-                    <div class="mockup-bar" aria-hidden="true">
-                        <span class="mockup-dot dot-red"></span>
-                        <span class="mockup-dot dot-yellow"></span>
-                        <span class="mockup-dot dot-green"></span>
-                    </div>
-                    <div class="carousel-slide active">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000"
-                             alt="Dashboard de gestão financeira" loading="eager">
-                    </div>
-                    <div class="carousel-slide">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200"
-                             alt="Relatórios e análises" loading="lazy">
-                    </div>
+            <div class="dashboard-carousel">
+                <div class="carousel-slide active">
+                    <img src="https://bs-uploads.toptal.io/blackfish-uploads/uploaded_file/file/465203/image-1607186163027-08f7f301d7d9bc30bbb10ceed33134a0.gif" alt="Interface de Gestão TaskFlow">
                 </div>
-
-                <div class="float-card float-card-1" aria-hidden="true">
-                    <div class="fc-icon" style="background:#ecfdf5;">💰</div>
-                    <div>
-                        <div>Receita mensal</div>
-                        <div class="fc-sub">+R$ 12.840</div>
-                    </div>
-                </div>
-
-                <div class="float-card float-card-2" aria-hidden="true">
-                    <div class="fc-icon" style="background:#eff6ff;">📋</div>
-                    <div>
-                        <div>Orçamentos</div>
-                        <div class="fc-sub">8 pendentes</div>
-                    </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200" alt="Interface Business Inteligente">
                 </div>
             </div>
-
         </div>
     </section>
 
-    <!-- SOCIAL PROOF -->
-    <div class="social-strip" aria-label="Empresas que confiam no TaskFlow">
-        <p>Usado por centenas de empresas em todo o Brasil</p>
-        <div class="social-logos">
-            <span>Acabamento +</span>
-            <span>TechServ</span>
-            <span>MecâniPro</span>
-            <span>ConstruFast</span>
-            <span>LimpaCorp</span>
-        </div>
-    </div>
-
-    <!-- FEATURES -->
-    <section class="features" id="features" aria-label="Recursos">
-        <div class="features-header">
-            <div class="section-label">Funcionalidades</div>
-            <h2 class="anim">Tudo que seu negócio precisa</h2>
-            <p class="anim">Ferramentas profissionais sem complexidade desnecessária.</p>
-        </div>
-
+    <section class="features-section" id="features">
         <div class="features-grid">
-
-            <div class="feat-card anim">
-                <div class="feat-icon" aria-hidden="true">📄</div>
-                <h3>Contratos em PDF</h3>
-                <p>Documentos 100% personalizáveis com sua logo, dados e condições de pagamento.</p>
-            </div>
-
-            <div class="feat-card anim">
-                <div class="feat-icon" aria-hidden="true">💸</div>
-                <h3>Orçamentos Rápidos</h3>
-                <p>Crie e envie propostas profissionais em segundos. Acompanhe aprovações em tempo real.</p>
-            </div>
-
-            <div class="feat-card anim">
-                <div class="feat-icon" aria-hidden="true">📊</div>
-                <h3>Fluxo de Caixa</h3>
-                <p>Controle financeiro completo com relatórios automáticos e gráficos intuitivos.</p>
-            </div>
-
-            <div class="feat-card anim">
-                <div class="feat-icon" aria-hidden="true">🧰</div>
-                <h3>Ordens de Serviço</h3>
-                <p>Gerencie tarefas, prazos e equipes com automatizações que economizam tempo.</p>
-            </div>
-
-            <div class="feat-card anim">
-                <div class="feat-icon" aria-hidden="true">👥</div>
-                <h3>Clientes Ilimitados</h3>
-                <p>CRM integrado para gerenciar todo o histórico de clientes e negociações.</p>
-            </div>
-
-            <div class="feat-card anim">
-                <div class="feat-icon" aria-hidden="true">📦</div>
-                <h3>Estoque Inteligente</h3>
-                <p>Controle de produtos com alertas de estoque mínimo e relatórios de movimentação.</p>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- PRICING -->
-    <section class="pricing" id="pricing" aria-label="Planos e preços">
-        <div class="pricing-inner">
-            <div class="pricing-header">
-                <div class="section-label anim" style="justify-content:center;">Planos</div>
-                <h2 class="anim">Simples e sem surpresas</h2>
-                <p class="anim">Um plano completo para o seu negócio crescer.</p>
-            </div>
-
-            <div class="anim">
-                <div class="price-card">
-                    <span class="price-badge">Mais popular</span>
-
-                    <h3>Plano Business</h3>
-                    <p class="sub">Acesso completo a todas as funcionalidades</p>
-
-                    <div class="price-amount">
-                        <span class="price-currency">R$</span>
-                        <span class="price-number">49</span>
-                        <span class="price-period">,90/mês</span>
-                    </div>
-
-                    <ul class="price-features">
-                        <li>Clientes ilimitados</li>
-                        <li>Orçamentos e contratos em PDF</li>
-                        <li>Fluxo de caixa em tempo real</li>
-                        <li>Ordens de serviço automáticas</li>
-                        <li>Estoque inteligente</li>
-                        <li>Suporte prioritário</li>
-                    </ul>
-
-                    <a th:href="@{/login(mode='signup')}" href="/login?mode=signup" class="btn-price">
-                        Começar agora — 7 dias grátis
-                    </a>
-
-                    <p class="price-note">Cancele quando quiser. Sem taxa de cancelamento.</p>
+            <div class="dashboard-carousel animate-fade">
+                <div class="carousel-slide active">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000" alt="Relatórios e Gráficos de Fluxo de Caixa">
                 </div>
             </div>
+
+            <div class="features-right">
+                <h2 class="animate-fade">Feito para o seu negócio</h2>
+                <ul class="features-list">
+                    <li class="feature-card animate-fade">
+                        <b class="feature-arrow">→</b>
+                        <div>
+                            <strong>Contratos PDF</strong><br>
+                            <small>Documentos 100% personalizáveis com sua logo.</small>
+                        </div>
+                    </li>
+                    <li class="feature-card animate-fade">
+                        <b class="feature-arrow">→</b>
+                        <div>
+                            <strong>Orçamentos Rápidos</strong><br>
+                            <small>Envie propostas e acompanhe o status de aprovação.</small>
+                        </div>
+                    </li>
+                    <li class="feature-card animate-fade">
+                        <b class="feature-arrow">→</b>
+                        <div>
+                            <strong>Fluxo de Caixa</strong><br>
+                            <small>Controle financeiro total e relatórios automáticos.</small>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </section>
 
+    <section class="pricing-section" id="pricing-section">
+        <h2 class="animate-fade">O plano ideal para o micro negócio</h2>
+        <div class="pricing-container">
+            <div class="price-card animate-fade">
+                <div class="badge">PLANO BUSINESS</div>
+                <h3>Acesso Completo</h3>
+                <div class="price">R$ 49,90<span>/mês</span></div>
+                <p>Gestão total do seu negócio sem limites de clientes ou contratos.</p>
+                <a th:href="@{/login(mode='signup')}" class="btn btn-primary btn-block-price">Assinar Agora</a>
+                <p class="price-footer-text">7 dias de teste gratuito. Cancele quando quiser.</p>
+            </div>
+        </div>
+    </section>
 </main>
 
-<!-- FOOTER -->
 <footer>
-    <div class="footer-inner">
-        <span class="footer-logo">TaskFlow</span>
-        <p style="font-size:.8125rem; color:rgba(255,255,255,.4);">© 2026 TaskFlow — Sistema de Gestão</p>
-        <nav class="footer-links" aria-label="Links do rodapé">
+    <div class="footer-content">
+        <p class="logo">Task<span>Flow</span></p>
+        <p class="footer-copy">© 2026 TaskFlow - Sistema de Gestão Inteligente</p>
+        <div class="footer-links">
             <a href="#">Privacidade</a>
             <a href="#">Termos de Uso</a>
-            <a href="https://wa.me/5511999999999" target="_blank" rel="noopener">WhatsApp</a>
-        </nav>
+            <a href="https://wa.me/5511999999999" class="whatsapp-support">Suporte WhatsApp</a>
+        </div>
     </div>
 </footer>
 
-<script th:src="@{/js/landing.js}" src="/js/landing.js" defer></script>
+<script th:src="@{/js/landing.js}" defer></script>
 
 </body>
 </html>

@@ -31,7 +31,7 @@ public class AssinaturaServico {
 
     @Transactional
     public CheckoutResposta contratarPlano(CheckoutRequisicao requisicao, String emailUsuario, String ip) {
-        log.info("CONTRATACAO[INICIO] - Email: {}, Plano: {}", emailUsuario, requisicao.planoId());
+        log.info("CONTRATACAO[INICIO] - Email: {}, Plano: {}", emailUsuario, requisicao.nomePlano());
 
         validarRequisicao(requisicao);
         Usuario usuarioLogado = buscarUsuarioOuFalhar(emailUsuario);
@@ -110,7 +110,7 @@ public class AssinaturaServico {
     }
 
     private void validarRequisicao(CheckoutRequisicao requisicao) {
-        if (Objects.isNull(requisicao) || Objects.isNull(requisicao.planoId())) {
+        if (Objects.isNull(requisicao) || Objects.isNull(requisicao.nomePlano())) {
             throw new IllegalArgumentException("Requisição inválida.");
         }
     }

@@ -5,6 +5,7 @@ import br.com.taskflow.gerenciamento.pagamento.dto.resposta.CheckoutResposta;
 import br.com.taskflow.gerenciamento.pagamento.dto.resposta.StatusPagamentoResposta;
 import br.com.taskflow.gerenciamento.pagamento.entidade.Assinatura;
 import br.com.taskflow.gerenciamento.pagamento.entidade.Transacao;
+import br.com.taskflow.gerenciamento.pagamento.enums.NomePlano;
 import br.com.taskflow.gerenciamento.pagamento.enums.StatusPagamento;
 import br.com.taskflow.gerenciamento.usuarios.entidade.Usuario;
 import lombok.extern.slf4j.Slf4j;
@@ -61,11 +62,11 @@ public class AssinaturaMapper {
             String usuarioAuditoria) {
 
         log.info("Mapper[Assinatura] - Preparando entidade para o usuário: {} e Plano: {}",
-                usuario.getEmail(), requisicao.planoId());
+                usuario.getEmail(), requisicao.nomePlano());
 
         return Assinatura.builder()
                 .usuario(usuario)
-                .planoId(requisicao.planoId())
+                .nomePlano(NomePlano.PRO)
                 .valor(new BigDecimal("49.90"))
                 .status(StatusPagamento.PENDENTE)
                 .proximoVencimento(LocalDate.now().plusDays(3))

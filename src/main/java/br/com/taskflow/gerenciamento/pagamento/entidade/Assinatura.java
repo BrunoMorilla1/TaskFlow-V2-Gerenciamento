@@ -1,5 +1,6 @@
 package br.com.taskflow.gerenciamento.pagamento.entidade;
 
+import br.com.taskflow.gerenciamento.pagamento.enums.NomePlano;
 import br.com.taskflow.gerenciamento.pagamento.enums.StatusPagamento;
 import br.com.taskflow.gerenciamento.usuarios.entidade.Usuario;
 import jakarta.persistence.*;
@@ -45,7 +46,7 @@ public class Assinatura {
     private Usuario usuario;
 
     @Column(name = "plano_id", nullable = false)
-    private Long planoId;
+    NomePlano nomePlano;
 
     @Column(name = "asaas_id", length = 100)
     private String asaasId;

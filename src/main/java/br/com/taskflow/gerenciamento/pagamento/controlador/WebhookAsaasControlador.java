@@ -31,7 +31,6 @@ public class WebhookAsaasControlador {
                 eventoId, ip);
 
         try {
-            // Delegamos o processamento pesado para o serviço (que lida com idempotência)
             processadorPagamentoServico.processarWebhook(requisicao, ip);
 
             log.info("Controlador[Webhook] - Evento processado com sucesso. evento={}, ip={}",

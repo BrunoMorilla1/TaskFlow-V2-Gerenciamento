@@ -1,6 +1,7 @@
 package br.com.taskflow.gerenciamento.pagamento.dto.requisicao;
 
 import br.com.taskflow.gerenciamento.pagamento.enums.FormaPagamento;
+import br.com.taskflow.gerenciamento.pagamento.enums.NomePlano;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +10,7 @@ import jakarta.validation.constraints.Pattern;
 public record CheckoutRequisicao(
 
         @NotNull(message = "O ID do plano é obrigatório")
-        Long planoId,
+        NomePlano nomePlano,
 
         @NotNull(message = "A forma de pagamento é obrigatória")
         FormaPagamento formaPagamento,

@@ -185,6 +185,9 @@ function setField(id, value) {
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    if (!window.Taskflow || !window.Taskflow.requireAuth()) return;
+
     const formData = new FormData(form);
     const payload = {
         cnpj: onlyNumbers(cnpjInput.value),
@@ -197,26 +200,17 @@ form.addEventListener('submit', async (e) => {
         inscricaoMunicipal: formData.get('inscricaoMunicipal'),
         site: formData.get('site')
     };
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-        window.location.href = '/login';
-        return;
-    }
+
     showLoading();
     try {
-        const response = await fetch('/api/v1/empresas', {
+        await window.Taskflow.apiFetch('/api/v1/empresas', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
             body: JSON.stringify(payload)
         });
-        if (!response.ok) throw new Error('Erro ao cadastrar empresa');
         showAlert('✅ Empresa cadastrada!', 'success');
         setTimeout(() => { window.location.href = '/planos'; }, 1200);
     } catch (error) {
-        showAlert('❌ ' + error.message, 'error');
+        showAlert('❌ ' + (error.message || 'Erro ao cadastrar empresa'), 'error');
     } finally {
         hideLoading();
     }
