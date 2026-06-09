@@ -23,56 +23,43 @@ public class AssinaturaControlador {
     private final AssinaturaServico assinaturaServico;
 
     @PostMapping("/contratar")
-    public ResponseEntity<CheckoutResposta> contratarPlano(@Valid @RequestBody CheckoutRequisicao requisicao,
+    public ResponseEntity<CheckoutResposta> contratarPlano(@Valid @RequestBody CheckoutRequisicao req,
                                                            @AuthenticationPrincipal UserDetails principal,
-                                                           HttpServletRequest request) {
-        String ip = request.getRemoteAddr();
-        log.info("Controlador[Assinatura] - Requisicao para contratacao de plano 49,90. usuario={}, ip={}",
-                principal.getUsername(), ip);
-
-        CheckoutResposta response = assinaturaServico.contratarPlano(requisicao, principal.getUsername(), ip);
-
-        log.info("Controlador[Assinatura] - Plano contratado com sucesso. assinaturaId={}, usuario={}, ip={}",
-                response.assinaturaId(), principal.getUsername(), ip);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                                                           HttpServletRequest http) {
+        String ip = extrairIp(http);
+        CheckoutResposta resp = assinaturaServico.contratarPlano(req, principal.getUsername(), ip);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
     @GetMapping("/meu-plano")
-    public ResponseEntity<StatusPagamentoResposta> buscarMinhaAssinatura(@AuthenticationPrincipal UserDetails principal,
-                                                                         HttpServletRequest request) {
-        String ip = request.getRemoteAddr();
-        log.info("Controlador[Assinatura] - Requisicao para buscar status do plano. usuario={}, ip={}",
-                principal.getUsername(), ip);
-
+    public ResponseEntity<StatusPagamentoResposta> meuPlano(@AuthenticationPrincipal UserDetails principal,
+                                                            HttpServletRequest http) {
         try {
-            var response = assinaturaServico.buscarStatusPorUsuario(principal.getUsername(), ip);
-
-            log.info("Controlador[Assinatura] - Status do plano recuperado. status={}, usuario={}, ip={}",
-                    response.status(), principal.getUsername(), ip);
-
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(assinaturaServico.buscarStatusPorUsuario(principal.getUsername(), extrairIp(http)));
         } catch (RuntimeException e) {
-            if (e.getMessage().contains("Nenhuma transação encontrada")) {
-                log.info("Controlador[Assinatura] - Usuário novo sem assinaturas: {}", principal.getUsername());
-                return ResponseEntity.noContent().build();
-            }
+            if (e.getMessage() != null && e.getMessage().contains("Nenhuma transação")) {
+            return ResponseEntity.noContent().build();
+        }
             throw e;
         }
     }
 
+    @GetMapping("/pagamentos/{asaasPaymentId}/status")
+    public ResponseEntity<StatusPagamentoResposta> sincronizarStatus(@PathVariable String asaasPaymentId,
+                                                                     @AuthenticationPrincipal UserDetails principal) {
+        return ResponseEntity.ok(assinaturaServico.sincronizarStatus(principal.getUsername(), asaasPaymentId));
+    }
+
     @DeleteMapping("/cancelar")
-    public ResponseEntity<Void> cancelarAssinatura(@AuthenticationPrincipal UserDetails principal,
-                                                   HttpServletRequest request) {
-        String ip = request.getRemoteAddr();
-        log.info("Controlador[Assinatura] - Requisicao para CANCELAMENTO de plano. usuario={}, ip={}",
-                principal.getUsername(), ip);
-
-        assinaturaServico.cancelarAssinatura(principal.getUsername(), ip);
-
-        log.info("Controlador[Assinatura] - Plano cancelado com sucesso. usuario={}, ip={}",
-                principal.getUsername(), ip);
-
+    public ResponseEntity<Void> cancelar(@AuthenticationPrincipal UserDetails principal,
+                                         HttpServletRequest http) {
+        assinaturaServico.cancelarAssinatura(principal.getUsername(), extrairIp(http));
         return ResponseEntity.noContent().build();
     }
-}
+
+    private String extrairIp(HttpServletRequest req) {
+        String xf = req.getHeader("X-Forwarded-For");
+        if (xf != null && !xf.isBlank()) return xf.split(",")[0].trim();
+        return req.getRemoteAddr();
+        }
+    }

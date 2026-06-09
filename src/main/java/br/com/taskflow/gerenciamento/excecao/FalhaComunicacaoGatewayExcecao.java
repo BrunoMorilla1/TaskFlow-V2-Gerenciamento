@@ -27,7 +27,10 @@ public class FalhaComunicacaoGatewayExcecao extends NegocioException {
         this.ip = ip;
     }
 
-    public FalhaComunicacaoGatewayExcecao(String gateway, String usuarioId, String ip) {
-        this(gateway, usuarioId, ip, null);
+    public FalhaComunicacaoGatewayExcecao(String mensagem) {
+        super(mensagem, HttpStatus.SERVICE_UNAVAILABLE, CODIGO_ERRO);
+        this.gateway = "Desconhecido";
+        this.usuarioId = "N/A";
+        this.ip = "N/A";
     }
 }

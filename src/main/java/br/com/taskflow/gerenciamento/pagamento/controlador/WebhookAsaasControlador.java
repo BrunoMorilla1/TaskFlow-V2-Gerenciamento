@@ -1,15 +1,14 @@
 package br.com.taskflow.gerenciamento.pagamento.controlador;
 
+import br.com.taskflow.gerenciamento.pagamento.cliente.asaas.ConfiguracaoAsaas;
 import br.com.taskflow.gerenciamento.pagamento.dto.requisicao.WebhookAsaasRequisicao;
 import br.com.taskflow.gerenciamento.pagamento.servico.ProcessadorPagamentoServico;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/webhooks/asaas")
@@ -18,30 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebhookAsaasControlador {
 
     private final ProcessadorPagamentoServico processadorPagamentoServico;
-
+    private final ConfiguracaoAsaas configuracao;
 
     @PostMapping
-    public ResponseEntity<Void> receberEvento(@RequestBody WebhookAsaasRequisicao requisicao,
-                                              HttpServletRequest request) {
+    public ResponseEntity<Void> receber(@RequestHeader(value = "asaas-access-token", required = false) String token,
+                                                @RequestBody WebhookAsaasRequisicao req,
+                                        HttpServletRequest http) {
+        String ip = http.getRemoteAddr();
+        String esperado = configuracao.getWebhookToken();
 
-        String ip = request.getRemoteAddr();
-        String eventoId = requisicao.evento();
-
-        log.info("Controlador[Webhook] - Notificacao recebida do Asaas. evento={}, ip={}",
-                eventoId, ip);
+        if (esperado != null && !esperado.isBlank() && !esperado.equals(token)) {
+            log.warn("Webhook[ASAAS] - Token invalido. ip={}", ip);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         try {
-            processadorPagamentoServico.processarWebhook(requisicao, ip);
-
-            log.info("Controlador[Webhook] - Evento processado com sucesso. evento={}, ip={}",
-                    eventoId, ip);
-
-            return ResponseEntity.ok().build();
-
+            processadorPagamentoServico.processarWebhook(req, ip);
         } catch (Exception e) {
-            log.error("Controlador[Webhook] - Falha ao processar notificacao. evento={}, ip={}, erro={}",
-                    eventoId, ip, e.getMessage());
-            return ResponseEntity.ok().build();
+            log.error("Webhook[ASAAS] - Falha processando evento: {}", e.getMessage());
         }
+        return ResponseEntity.ok().build();
     }
 }

@@ -80,7 +80,7 @@ public class ConfiguracaoSeguranca {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/empresas/consultar-cnpj/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/empresas/segmentos").permitAll()
-                        .requestMatchers("/","/api/v1/segmentos", "/empresa", "/login", "/cadastro", "/landing.html", "planos", "/favicon.ico", "/site.webmanifest").permitAll()
+                        .requestMatchers("/","/api/v1/segmentos", "sucesso", "/empresa", "/login", "/cadastro", "/landing.html", "planos", "/favicon.ico", "/site.webmanifest").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/assets/**", "/images/**").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .anyRequest().authenticated()

@@ -2,7 +2,6 @@ spring:
   application:
     name: Taskflow Gerenciamento
 
-  # Configuração do Thymeleaf e Recursos (Adicionado e consolidado aqui)
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -42,21 +41,24 @@ spring:
           starttls:
             enable: true
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope:
-              - email
-              - profile
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: ${GOOGLE_CLIENT_ID:}
+#            client-secret: ${GOOGLE_CLIENT_SECRET:}
+#            scope:
+#              - email
+#              - profile
+#            redirect-uri: \"{baseUrl}/login/oauth2/code/{registrationId}\"
+#chave: ${$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmQzZWViMDI4LTgxNDItNGEwMy05OGMzLTgxYzVmMDQyNTA1ZTo6JGFhY2hfOGE4N2JkZjMtZDhkMi00YjA2LWIxZTYtNzI0NGVhNTNmZWM4}
 
 asaas:
-  url: ${ASAAS_URL:https://sandbox.asaas.com/v3}
-  chave: ${aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjI2M2I5ODk0LWZjOTgtNDE5Yi04ZGQ4LTYzMTc0NGU0YzcwNjo6JGFhY2hfMGYzZWY5ZWMtYzI0My00ZmNmLWE4NDktOGNkYTFkY2Y1NmQ1}
+  url: ${ASAAS_URL:https://api.asaas.com/v3}
+  chave: ${ASAAS_API_KEY:5afc5a40-623b-407c-80b9-8dc2f517cd37}
+  webhook-token: ${ASAAS_WEBHOOK_TOKEN:troque-este-token-em-producao-com-no-minimo-32-caracteres}
+  user-agent: TaskFlow-Gerenciamento/1.0
 
 server:
   port: 8080
@@ -64,13 +66,20 @@ server:
 jwt:
   secret: ${JWT_SECRET:4wdv87e/KfQ9dxREsR1C/RJeUSWXccRB1LUVWku6RM0=}
   expiration:
-    access: 3600000        # 1 hora
-    refresh: 86400000       # 24 horas
+    access: 3600000
+    refresh: 86400000
   issuer: taskflow-api
   audience: taskflow-client
 
 logging:
-  config: classpath:logback.xml
+  level:
+    org:
+      springframework:
+        web:
+          client: DEBUG
+    br:
+      com:
+        taskflow: DEBUG
 
 springdoc:
   api-docs:
@@ -79,9 +88,4 @@ springdoc:
     path: /swagger-ui.html
     operationsSorter: alpha
     tagsSorter: alpha
-
-
-
-
-
 
