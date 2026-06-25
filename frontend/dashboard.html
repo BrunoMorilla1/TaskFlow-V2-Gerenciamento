@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TaskFlow Gerenciamento</title>
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+        .stat-number {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin: 12px 0 8px 0;
+        }
+        .chart-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            margin-top: 30px;
+            min-height: 380px;
+        }
+        .table-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>TaskFlow</h2>
+            <p>Gerenciamento V2</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="empresas.html" class="nav-item">
+                <span>🏢</span> Empresas
+            </a>
+            <a href="clientes.html" class="nav-item">
+                <span>👥</span> Clientes
+            </a>
+            <a href="funcionarios.html" class="nav-item">
+                <span>👷</span> Funcionários
+            </a>
+            <a href="estoque.html" class="nav-item">
+                <span>📦</span> Estoque / Produtos
+            </a>
+            <a href="ordens-servico.html" class="nav-item">
+                <span>🔧</span> Ordens de Serviço
+            </a>
+            <a href="orcamentos.html" class="nav-item">
+                <span>📄</span> Orçamentos
+            </a>
+            <a href="financeiro.html" class="nav-item">
+                <span>💰</span> Financeiro
+            </a>
+            <a href="relatorios.html" class="nav-item">
+                <span>📈</span> Relatórios
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <button id="menuToggle" class="menu-btn">☰</button>
+                <h1>Dashboard Geral</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span id="userName">Olá, Usuário</span>
+                    <button onclick="logout()" class="btn btn-danger">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <h3>Receita do Mês</h3>
+                <div class="stat-number" id="receitaTotal">R$ 54.820</div>
+                <p style="color: var(--success);">↑ 18% em relação ao mês anterior</p>
+            </div>
+            <div class="stat-card">
+                <h3>Ordens em Aberto</h3>
+                <div class="stat-number" id="ordensAberto">23</div>
+                <p style="color: var(--warning);">Aguardando execução</p>
+            </div>
+            <div class="stat-card">
+                <h3>Clientes Ativos</h3>
+                <div class="stat-number" id="clientesAtivos">142</div>
+                <p style="color: var(--primary);">Cadastrados</p>
+            </div>
+            <div class="stat-card">
+                <h3>Itens em Estoque</h3>
+                <div class="stat-number" id="estoqueTotal">387</div>
+                <p style="color: var(--info);">Produtos</p>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2>Visão Financeira dos Últimos 6 Meses</h2>
+            <p style="color: var(--text-secondary); margin-top: 20px;">
+                [Aqui será implementado um gráfico com Chart.js ou ApexCharts]
+            </p>
+        </div>
+
+        <div class="table-container">
+            <h2>Últimas Ordens de Serviço</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Serviço</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                </tr>
+                </thead>
+                <tbody id="ultimasOrdens">
+                <!-- JS irá preencher -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script src="config/config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        checkAuth();
+
+        // Toggle sidebar no mobile
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Carregar nome do usuário
+        const user = localStorage.getItem('user');
+        if (user) {
+            const userData = JSON.parse(user);
+            document.getElementById('userName').textContent = `Olá, ${userData.nome || 'Usuário'}`;
+        }
+
+        // Dados mockados (substitua por chamadas reais depois)
+        loadMockData();
+    });
+
+    function loadMockData() {
+        document.getElementById('receitaTotal').textContent = 'R$ 54.820';
+        document.getElementById('ordensAberto').textContent = '23';
+        document.getElementById('clientesAtivos').textContent = '142';
+        document.getElementById('estoqueTotal').textContent = '387';
+    }
+</script>
+</body>
+</html>

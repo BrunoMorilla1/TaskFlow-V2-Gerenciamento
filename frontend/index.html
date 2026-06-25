@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Login</title>
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .login-box {
+            width: 100%;
+            max-width: 460px;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 50px 45px;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+        .logo-area {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .logo-area h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #6366f1, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .form-input {
+            width: 100%;
+            padding: 16px 18px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 1.05rem;
+        }
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .btn-login:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .error {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        .footer-text {
+            text-align: center;
+            margin-top: 35px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+<div class="login-page">
+    <div class="login-box">
+        <div class="logo-area">
+            <h1>TaskFlow</h1>
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">Gestão Empresarial Profissional</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label">E-mail ou Usuário</label>
+                <input type="text" id="email" class="form-input" placeholder="admin@taskflow.com.br" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Senha</label>
+                <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-login">ENTRAR NO SISTEMA</button>
+        </form>
+
+        <div id="errorMessage" class="error"></div>
+
+        <div class="footer-text">
+            TaskFlow Gerenciamento v2.0 • Todos direitos reservados
+        </div>
+    </div>
+</div>
+
+<script src="config/config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const errorEl = document.getElementById('errorMessage');
+
+        errorEl.textContent = 'Autenticando...';
+
+        try {
+            const res = await fetch(config.API_BASE_URL + config.ENDPOINTS.AUTH.LOGIN, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha: password })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem('token', data.token);
+                if (data.user) localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = 'dashboard.html';
+            } else {
+                const err = await res.json().catch(() => ({}));
+                errorEl.textContent = err.message || 'Credenciais inválidas';
+            }
+        } catch (err) {
+            errorEl.textContent = 'Erro ao conectar com o servidor. Verifique se o backend está rodando.';
+        }
+    });
+</script>
+</body>
+</html>
